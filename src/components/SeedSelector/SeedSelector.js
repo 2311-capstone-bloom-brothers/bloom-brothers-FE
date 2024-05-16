@@ -6,7 +6,7 @@ export default function SeedSelector() {
 
     return (
         <StyledSeedSelector>
-            
+            <button>plant flower</button>
         </StyledSeedSelector>
     )
 }
