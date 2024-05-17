@@ -26,10 +26,12 @@ export default function FlowerAssembly({ flower }) {
             setBloomAngle(angle)
         }
 
+        console.log('flower', flower)
+
     return (
         <>
-            {thisFlower && <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]}/>}
-            <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]}/>
+            {flower && <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />}
+            {flower && <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} /> }
         </>
     )
 }
