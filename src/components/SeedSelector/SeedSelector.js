@@ -18,6 +18,7 @@ export default function SeedSelector({ plantFlower, myFlowers }) {
         // return <div className="flower"></div>
     })
 
+    
     return (
         <>
             <StyledSeedSelector>
