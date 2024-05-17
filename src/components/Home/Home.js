@@ -5,7 +5,7 @@ import userFlowers from "../../userFlowers-dummy";
 import { useState, useEffect } from 'react'
 
 export default function Home() {
-    const [ myFlowers, setMyFlowers ] = useState([0, 1, 2, 3, 4])
+    const [ myFlowers, setMyFlowers ] = useState()
 
     function plantFlower() {
         

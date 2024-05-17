@@ -3,9 +3,11 @@ import { StyledFlowers } from "./Flowers.styled";
 import { useState } from 'react'
 
 export default function Flowers({myFlowers}) {
+console.log('myFlowers in flowers', myFlowers)
 
     const flowers = myFlowers.map((flower) => {
-        return <FlowerAssembly flower={flower} />
+        console.log('flower in flower', flower)
+        return <FlowerAssembly key={flower.id} flower={flower} />
         // return <div className="flower"></div>
     })
 

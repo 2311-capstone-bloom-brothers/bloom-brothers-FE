@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import Receptacle from "./Receptacle"
 import Stem from "./Stem"
-
+import { Canvas } from '@react-three/fiber'
+import { OrbitControls, PerspectiveCamera, Sky } from '@react-three/drei';
 
 export default function FlowerAssembly({ flower }) {
     const [planted, setPlanted] = useState(Date.now())
@@ -29,9 +30,14 @@ export default function FlowerAssembly({ flower }) {
         console.log('flower', flower)
 
     return (
-        <>
+        <Canvas>
+            <ambientLight intensity={1} />
+            <directionalLight intensity={10} castShadow position={[2, 1, 5]} shadow-mapSize={[1024, 1024]} />
+            <PerspectiveCamera makeDefault position={[10, 15, 0]} fov={75} near={0.001} far={1000} />
+            <OrbitControls />
+            <Sky />
             {flower && <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />}
             {flower && <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} /> }
-        </>
+        </Canvas>
     )
 }
