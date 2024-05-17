@@ -2,10 +2,10 @@ const flowers = [
   {
     flower1: {
       type: 'flower1',
-      // name: 'flower_name',
-      // id: 'flower_id',
-      // description: 'flower_desc',
-      // planted: Date.now(),
+      name: 'flower_name',
+      id: 'flower_id',
+      description: 'flower_desc',
+      planted: Date.now(),
       phases: {
         stem: {
           color: [150,170,150],

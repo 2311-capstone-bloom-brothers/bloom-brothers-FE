@@ -24,17 +24,6 @@ export default function Home() {
     
         return componentData
       }
-    
-    //   const percentBetween = Math.round((Date.now - planted - stageNum) * 100)
-    
-    //   const data1 = getComponentData(flower, 'bloom', currentStage)
-    //   const data2 = getComponentData(flower, 'bloom', currentStage + 1)
-    //   const dataKeys = Object.keys(data1)
-    //   const avgData = dataKeys.reduce((acc, dataKey) => {
-    //     acc[dataKey] = (data1[dataKey] + (data2[dataKey] - data1[dataKey]) * percentBetween)
-    
-    //     return acc
-    //   }, {})
 
     const convertFlowerObject = (flower) => {  
         const newFlower = {
@@ -91,7 +80,7 @@ export default function Home() {
                 {myFlowers &&
                     <>
                         <Flowers myFlowers={myFlowers}/>
-                        <SeedSelector plantFlower={plantFlower} />
+                        <SeedSelector plantFlower={plantFlower} myFlowers={myFlowers} />
                     </>
                 }
             </StyledHome>
