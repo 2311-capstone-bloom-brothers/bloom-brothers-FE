@@ -21,7 +21,7 @@ export default function NewPlantForm({ plantFlower }) {
     }
 
     return (
-        <StyledNewPlantForm>
+        <StyledNewPlantForm className="styled-new-plant-form">
             <p>you have no flowers yet. get one in the ground!</p>
             <div className="plant-form-container">
                 <div className="plant-form-labels">

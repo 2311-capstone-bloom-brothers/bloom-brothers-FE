@@ -15,11 +15,8 @@ export default function SeedSelector({ plantFlower, seedlings }) {
             <FlowerAssembly key={seedling.id} seedling={seedling} flower={null} />
         )
     })
-
-    console.log('seedlings', seedlings)
-
     return (
-        <StyledSeedSelector>
+        <StyledSeedSelector className="styled-seed-selector">
             {seedlingComponents}
             <NewPlantForm plantFlower={plantFlower}/>
         </StyledSeedSelector>

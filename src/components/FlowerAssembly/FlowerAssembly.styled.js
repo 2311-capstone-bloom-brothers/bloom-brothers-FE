@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledDiv = styled.div`
+export const StyledFlowerAssembly = styled.div`
     color: white;
     font-weight: bold;
 
@@ -10,5 +10,14 @@ export const StyledDiv = styled.div`
 
     .seedling {
         height: 200px !important;
+    }
+
+    .flower-assembly{
+        background-color: rgba(0,0,0,0.7);
+        text-align: center;
+    }
+    input{
+        border: 2px solid black;
+        color: white;
     }
 `

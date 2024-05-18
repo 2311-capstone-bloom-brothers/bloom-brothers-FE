@@ -6,13 +6,16 @@ export const StyledNewPlantForm = styled.form`
     align-items: center;
     color: white;
     font-weight: bold;
+    /* background-color: white; */
+    color: black;
+    font-size: 1.4em;
 
     .plant-form-labels {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
         margin-right: 10px;
-        color: white;
+        color: black;
         font-weight: bold;
     }
     
@@ -23,6 +26,8 @@ export const StyledNewPlantForm = styled.form`
     input {
         border: none;
         margin-left: 10px;
+        /* background-color: black;
+        color: white */
     }
 
     submit {

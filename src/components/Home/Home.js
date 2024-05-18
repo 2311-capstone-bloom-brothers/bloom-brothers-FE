@@ -19,43 +19,41 @@ export default function Home({ seedlings }) {
             type: 'flower1'
         }
 
-        // postFlower()
         setMyFlowers(prev => [...prev, newFlower])
     }
 
     function cleanFlowers(flowers) {
         return flowers.map((flower) => {
-            console.log('cleanFlowers', flowerConverter.convertFlowerObject(flower))
             return flowerConverter.convertFlowerObject(flower)
         })
     }
 
     function getAllFlowers() {
-        // getFlowers().then()
         const cleanedFlowers = cleanFlowers(seedlings)
         setMyFlowers(cleanedFlowers)
     }
 
     function getAllSeedlings() {
-        // getFlowers().then()
-        console.log('here')
         const cleanedSeedlings = cleanFlowers(seedlingsData)
         setMySeedlings(cleanedSeedlings)
     }
 
     useEffect(() => {
-        console.log('in here')
-        // getAllFlowers()
         getAllSeedlings()
     }, [])
 
     return (
-        <StyledHome className={`background${background}`}>
+        <StyledHome className={`styled-home ${background}`}>
+            <div className='background-container'>
+                <img src={'/assets/waver-background.jpg'}></img>
+            </div>
             <h1>bLOOMbABY</h1>
+           
             {myFlowers.length === 0 ?
-             mySeedlings && <SeedSelector plantFlower={plantFlower} seedlings={mySeedlings}/>
-            :
-            <Flowers myFlowers={myFlowers} />}
+             mySeedlings && <SeedSelector className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings}/>
+             :
+             <Flowers className="flowers" myFlowers={myFlowers} />}
+       
         </StyledHome>
     )
 }

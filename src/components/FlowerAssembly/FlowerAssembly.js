@@ -1,30 +1,48 @@
 import { useState, useEffect, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sky, OrthographicCamera } from '@react-three/drei';
-import { StyledDiv } from './FlowerAssembly.styled';
+import { Canvas, useFrame, extend } from '@react-three/fiber';
+import { OrbitControls, Sky, OrthographicCamera, Billboard, Text } from '@react-three/drei';
+import { StyledFlowerAssembly } from './FlowerAssembly.styled';
 import Receptacle from "./Receptacle";
 import Stem from "./Stem";
+import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
+import { BoxGeometry } from 'three'; // Import BoxGeometry
+
+extend({ BoxGeometry }); // Extend BoxGeometry
 
 function RotatingGroup({ children }) {
     const groupRef = useRef();
+    const materialRef = useRef();
 
-    useFrame(() => {
+    useFrame((state, delta) => {
         if (groupRef.current) {
-            groupRef.current.rotation.y += 0.005; // Adjust this value to control the speed of rotation
+            groupRef.current.rotation.y += 0.00; // Adjust this value to control the speed of rotation
+        }
+        if (materialRef.current) {
+            materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
         }
     });
 
-    return <group ref={groupRef} position={[0, -5, 0]}>{children}</group>;
+    return (
+        <group ref={groupRef} position={[0, -5, 0]}>
+            {children}
+            {/* <mesh>
+                <boxGeometry args={[2, 2, 2]} />
+                <customShaderMaterial ref={materialRef} />
+            </mesh> */}
+        </group>
+    );
 }
 
 export default function FlowerAssembly({ flower, seedling }) {
+    const [hovered, setHovered] = useState(false);
     const [planted, setPlanted] = useState(Date.now());
     const [currentTime, setCurrentTime] = useState(Date.now());
     const [topPoint, setTopPoint] = useState(null);
     const [bloomAngle, setBloomAngle] = useState(null);
     const [lifeCycle, setLifeCycle] = useState(10000); // Total life cycle duration in milliseconds
-    const [stage, setStage] = useState('seedling');
-    const [ currentPlants, setCurrentPlants ] = useState(null)
+    const [stage, setStage] = useState('thriving');
+    const [currentPlants, setCurrentPlants] = useState(null);
+    const [plantAge, setPlantAge] = useState();
 
     const stages = ['seedling', 'blooming', 'thriving', 'wilting', 'dead'];
     const stageDurations = lifeCycle / stages.length; // Duration for each stage
@@ -32,56 +50,52 @@ export default function FlowerAssembly({ flower, seedling }) {
     const getCurrentStage = () => {
         const timeElapsed = Date.now() - planted;
         const stageIndex = Math.floor(timeElapsed / stageDurations);
-        // console.log(lifeCycle);
         return stages[Math.min(stageIndex, stages.length - 1)];
     };
 
-    // function findCurrentPlantData() {
-    //     const stageIndex = Math.floor(timeElapsed / stageDurations);
-    //     const percentBetween = Math.round((Date.now - flower.planted - stageIndex) * 100)  
-    //     const data1 = getComponentData(flower, 'bloom', stageIndex)
-    //     const data2 = getComponentData(flower, 'bloom', stageIndex + 1)
-    //     const dataKeys = Object.keys(data1)
-    //     const avgData = dataKeys.reduce((acc, dataKey) => {
-    //         acc[dataKey] = (data1[dataKey] + (data2[dataKey] - data1[dataKey]) * percentBetween)
-        
-    //         return acc
-    //     }, {})
-    // }
+    useEffect(() => {
+        if (flower) {
+            const interval = setInterval(() => {
+                const age = Date.now() - parseInt(flower.planted);
+                setPlantAge(age / 1000);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [flower]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            let timeElapsed = Date.now() - planted;
-            let stageIndex = Math.floor(timeElapsed / stageDurations);
-            if(stageIndex < 5) {
-                setCurrentTime(Date.now());
-                setStage(getCurrentStage(stageIndex));
-            } else {
-                stageIndex = 0;
-                timeElapsed = Date.now() - planted;
-                setPlanted(Date.now());
-                setCurrentTime(Date.now());
-                setStage(getCurrentStage(stageIndex));
-            }
-            // console.log(stageIndex);
-        }, 1000); // Update every second
+        // const interval = setInterval(() => {
+        //     let timeElapsed = Date.now() - planted;
+        //     let stageIndex = Math.floor(timeElapsed / stageDurations);
+        //     if (stageIndex < 5) {
+        //         setCurrentTime(Date.now());
+        //         setStage(getCurrentStage(stageIndex));
+        //     } else {
+        //         stageIndex = 0;
+        //         timeElapsed = Date.now() - planted;
+        //         setPlanted(Date.now());
+        //         setCurrentTime(Date.now());
+        //         setStage(getCurrentStage(stageIndex));
+        //     }
+        // }, 1000); 
 
-        return () => clearInterval(interval);
+        // return () => clearInterval(interval);
     }, [planted, lifeCycle]);
 
     const handleTopPoint = (point, angle) => {
-        const bloomAngle = angle - 11;
+        const bloomAngle = angle;
         setTopPoint(point);
         setBloomAngle(bloomAngle);
     };
 
     return (
-        <StyledDiv>
-            {seedling && <p>here's a sEEDbABY:</p>}
+        <StyledFlowerAssembly className='styled-flower-assembly'>
+            {seedling && <p className="flower-assembly">here's a sEEDbABY:</p>}
             <Canvas className={seedling ? "seedling" : "flower"} id='flowerCanvas'>
                 <ambientLight intensity={1} />
                 <directionalLight intensity={10} castShadow position={[2, 1, 5]} shadow-mapSize={[1024, 1024]} />
                 <OrthographicCamera makeDefault position={[100, 10, 10]} zoom={30} />
+                {seedling && <OrthographicCamera makeDefault position={[100, 1000, 0]} zoom={40} />}
                 <OrbitControls />
                 <Sky
                     distance={450000}
@@ -93,7 +107,16 @@ export default function FlowerAssembly({ flower, seedling }) {
                     mieCoefficient={0.005}
                     mieDirectionalG={1}
                 />
-                <RotatingGroup>
+                <RotatingGroup className='rotating-group'>
+                    <Billboard
+                        follow={true}
+                        lockX={false}
+                        lockY={false}
+                        lockZ={false} // Lock the rotation on the z axis (default=false)
+                    >
+                        <Text position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
+                        <Text position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
+                    </Billboard>
                     {flower &&
                         <>
                             <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
@@ -108,6 +131,6 @@ export default function FlowerAssembly({ flower, seedling }) {
                     }
                 </RotatingGroup>
             </Canvas>
-        </StyledDiv>
+        </StyledFlowerAssembly>
     );
 }

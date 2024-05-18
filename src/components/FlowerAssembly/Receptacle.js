@@ -1,6 +1,7 @@
 import { Sphere } from "@react-three/drei"
 import Petals from "./Petals"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import { useFrame } from "@react-three/fiber"
 
 const Receptacle = ({flower, topPoint, bloomAngle}) => {
     const [receptRadius, setReceptRadius] = useState()
@@ -8,6 +9,13 @@ const Receptacle = ({flower, topPoint, bloomAngle}) => {
     const [flowerPetals, setFlowerPetals] = useState()
     const [attachPoint, setattachPoint] = useState()
     const [scale, setScale] = useState()
+    const materialRef = useRef();
+
+    useFrame((state, delta) => {
+        // if (materialRef.current) {
+        //     materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
+        // }
+    });
 
     let petalArray
 
@@ -44,6 +52,9 @@ const Receptacle = ({flower, topPoint, bloomAngle}) => {
             setFlowerPetals(petalArray);
             setReceptRadius(flower.recRadius)
         }
+        if (materialRef.current) {
+            materialRef.current.uniforms.uColor.value.set('yellow')
+        }
     }, [flower]);
 
     return (
@@ -51,7 +62,8 @@ const Receptacle = ({flower, topPoint, bloomAngle}) => {
             <group scale={scale} position={attachPoint} rotation={[bloomAngle,0,0]}>
                 {flowerPetals && flowerPetals}
                 {attachPoint && <Sphere position={[0, 0, 0]} args={[receptRadius]}>
-                    <meshStandardMaterial color="yellow" />
+                    {/* <meshStandardMaterial color="yellow" /> */}
+                    <customShaderMaterial ref={materialRef} />
                 </Sphere>}
             </group>
         </>

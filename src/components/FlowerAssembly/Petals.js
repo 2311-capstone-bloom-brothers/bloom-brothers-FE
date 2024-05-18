@@ -1,8 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
 import * as THREE from 'three'
 import { Noise } from 'noisejs'
+import { useFrame } from '@react-three/fiber';
 
 function Petals({ color, positionX, positionY, positionZ, flower}) {
+  const materialRef = useRef();
 const { noiseScale,
         noiseImpactX,
         noiseImpactY,
@@ -16,6 +18,12 @@ const { noiseScale,
 
   const meshRef = useRef()
   const noise = new Noise(123456)
+
+  useFrame((state, delta) => {
+    // if (materialRef.current) {
+    //     materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
+    // }
+});
   
   useEffect(() => {
     const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments)
@@ -42,6 +50,10 @@ const { noiseScale,
     if (meshRef.current) {
       meshRef.current.geometry = geometry
     }
+
+  //   if (materialRef.current) {
+  //     materialRef.current.uniforms.uColor.value.set('purple')
+  // }
   }, [flower])
 
   return (
@@ -50,7 +62,8 @@ const { noiseScale,
       rotation={rotation}
       position={[positionX, positionY, positionZ]}
     >
-      <meshLambertMaterial attach="material" color={color} />
+      {/* <meshLambertMaterial attach="material" color={color} /> */}
+      <customShaderMaterial ref={materialRef} />
     </mesh>
   )
 }
