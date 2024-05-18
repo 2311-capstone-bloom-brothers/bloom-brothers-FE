@@ -1,6 +1,5 @@
 import FlowerAssembly from "../FlowerAssembly/FlowerAssembly"
 import { StyledFlowers } from "./Flowers.styled";
-import { useState, useEffect } from 'react'
 
 export default function Flowers({myFlowers}) {
 

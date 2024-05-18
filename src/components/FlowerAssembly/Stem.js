@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three'; // Import THREE
 import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
-import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
+// import { customShaderMaterial } from '../../functions/CustomShaderMaterial';
 import { useFrame } from '@react-three/fiber';
 
 const Stem = ({ onTopPointComputed, flower, color }) => {
@@ -14,19 +13,6 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
       materialRef.current.uniforms.uTime.value += delta;
     }
   });
-
-  useEffect(() => {
-    const wiltPath = new CatmullRomCurve3([
-      new Vector3(0.5, 0, 0),
-      new Vector3(0.5, 0, 0),
-      new Vector3(0.5, 0, 0.56),
-      new Vector3(0.1, 4.5, 0.88),
-      new Vector3(0.1, 7.46, 1.42),
-      new Vector3(0.1, 8.34, 1.08),
-      new Vector3(0.1, 8.42, 0),
-      new Vector3(0.1, 7.08, -0.26)
-    ]);
-  }, []);
 
   useEffect(() => {
     let pointsArray = [];

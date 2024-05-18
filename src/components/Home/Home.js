@@ -28,10 +28,10 @@ export default function Home({ seedlings }) {
         })
     }
 
-    function getAllFlowers() {
-        const cleanedFlowers = cleanFlowers(seedlings)
-        setMyFlowers(cleanedFlowers)
-    }
+    // function getAllFlowers() {
+    //     const cleanedFlowers = cleanFlowers(seedlings)
+    //     setMyFlowers(cleanedFlowers)
+    // }
 
     function getAllSeedlings() {
         const cleanedSeedlings = cleanFlowers(seedlingsData)
@@ -40,12 +40,13 @@ export default function Home({ seedlings }) {
 
     useEffect(() => {
         getAllSeedlings()
+        setBackground('1')
     }, [])
 
     return (
         <StyledHome className={`styled-home ${background}`}>
             <div className='background-container'>
-                <img src={'/assets/waver-background.jpg'}></img>
+                <img src={'/assets/waver-background.jpg'} alt='background waves'></img>
             </div>
             <h1>bLOOMbABY</h1>
            

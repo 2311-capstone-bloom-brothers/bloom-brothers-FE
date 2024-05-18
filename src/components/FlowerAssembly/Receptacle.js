@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber"
 
 const Receptacle = ({flower, topPoint, bloomAngle}) => {
     const [receptRadius, setReceptRadius] = useState()
-    const [currentPhase, setCurrentPhase] = useState('thriving')
+    // const [currentPhase, setCurrentPhase] = useState('thriving')
     const [flowerPetals, setFlowerPetals] = useState()
     const [attachPoint, setattachPoint] = useState()
     const [scale, setScale] = useState()
@@ -55,6 +55,7 @@ const Receptacle = ({flower, topPoint, bloomAngle}) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uColor.value.set('yellow')
         }
+        setScale(1)
     }, [flower]);
 
     return (
