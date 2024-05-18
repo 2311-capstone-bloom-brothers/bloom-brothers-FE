@@ -5,6 +5,8 @@ import { useState } from 'react'
 export default function SeedSelector({ plantFlower, myFlowers }) {
     const [ newPlant, setNewPlant ] = useState()
 
+    console.log(myFlowers)
+
     function handleClick() {
         plantFlower()
     }

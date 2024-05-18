@@ -10,5 +10,6 @@ export const StyledHome = styled.div`
         color: white;
         background-color: black;
         width: fit-content;
+        margin: none;
     }
 `

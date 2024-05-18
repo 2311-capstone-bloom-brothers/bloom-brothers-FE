@@ -39,8 +39,19 @@ export default function FlowerAssembly({ flower }) {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentTime(Date.now());
-            setStage(getCurrentStage());
+            let timeElapsed = Date.now() - planted;
+            let stageIndex = Math.floor(timeElapsed / stageDurations)
+            if(stageIndex < 5){
+                setCurrentTime(Date.now());
+                setStage(getCurrentStage(stageIndex));
+            } else {
+                stageIndex = 0
+                timeElapsed = Date.now() - planted
+                setPlanted(Date.now())
+                setCurrentTime(Date.now());
+                setStage(getCurrentStage(stageIndex))
+            }
+            console.log(stageIndex)
         }, 1000); // Update every second
 
         return () => clearInterval(interval);
