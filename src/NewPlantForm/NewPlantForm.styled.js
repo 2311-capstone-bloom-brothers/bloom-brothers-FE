@@ -2,7 +2,10 @@ import styled from "styled-components";
 
 export const StyledNewPlantForm = styled.form`
     display: flex;
+    flex-direction: column;
     align-items: center;
+    color: white;
+    font-weight: bold;
 
     .plant-form-labels {
         display: flex;
@@ -25,5 +28,9 @@ export const StyledNewPlantForm = styled.form`
     button {
         cursor: pointer;
         padding: 15px;
+    }
+
+    .plant-form-container {
+        display: flex;
     }
 `

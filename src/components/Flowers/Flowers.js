@@ -16,9 +16,8 @@ console.log('myFlowers in flowers', myFlowers)
     })
 
     return (
-        <></>
-        // <StyledFlowers>
-          /* {flowers} */
-        // </StyledFlowers>
+        <StyledFlowers>
+          {flowers}
+        </StyledFlowers>
     )
 }

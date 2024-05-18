@@ -17,7 +17,7 @@ function RotatingGroup({ children }) {
     return <group ref={groupRef} position={[0, -5, 0]}>{children}</group>;
 }
 
-export default function FlowerAssembly({ flower }) {
+export default function FlowerAssembly({ flower, seedling }) {
     const [planted, setPlanted] = useState(Date.now());
     const [currentTime, setCurrentTime] = useState(Date.now());
     const [topPoint, setTopPoint] = useState(null);
@@ -75,9 +75,12 @@ export default function FlowerAssembly({ flower }) {
         setBloomAngle(bloomAngle);
     };
 
+    console.log('seedling', seedling)
+
     return (
         <StyledDiv>
-            <Canvas id='flowerCanvas'>
+            {seedling && <p>here's a sEEDbABY:</p>}
+            <Canvas className={seedling ? "seedling" : "flower"} id='flowerCanvas'>
                 <ambientLight intensity={1} />
                 <directionalLight intensity={10} castShadow position={[2, 1, 5]} shadow-mapSize={[1024, 1024]} />
                 <OrthographicCamera makeDefault position={[100, 10, 10]} zoom={30} />
@@ -93,8 +96,18 @@ export default function FlowerAssembly({ flower }) {
                     mieDirectionalG={1}
                 />
                 <RotatingGroup>
-                    {flower && <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />}
-                    {flower && <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />}
+                    {flower &&
+                        <>
+                            <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
+                            <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />
+                        </>
+                    }
+                    {seedling &&
+                        <>
+                            <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={seedling.phases['seedling']} />
+                            <Stem onTopPointComputed={handleTopPoint} flower={seedling.phases['seedling']} />
+                        </>
+                    }
                 </RotatingGroup>
             </Canvas>
         </StyledDiv>

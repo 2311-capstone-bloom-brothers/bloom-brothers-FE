@@ -1,11 +1,12 @@
 import { StyledHome } from "./Home.styled";
 import SeedSelector from "../SeedSelector/SeedSelector";
+import Flowers from "../Flowers/Flowers";
 import * as flowerConverter from '../../functions/convertFlowerObject'
 import { useEffect, useState } from "react";
-import { seedlings } from '../../seedlings-dummy'
+import { seedlingsData } from '../../seedlings-dummy'
 
 export default function Home({ seedlings }) {
-    const [ myFlowers, setMyFlowers ] = useState()
+    const [ myFlowers, setMyFlowers ] = useState([])
     const [ mySeedlings, setMySeedlings ] = useState()
 
     function plantFlower(formData) {
@@ -37,14 +38,28 @@ export default function Home({ seedlings }) {
         setMyFlowers(cleanedFlowers)
     }
 
+    function getAllSeedlings() {
+        // getFlowers().then()
+        console.log('here')
+        const cleanedSeedlings = cleanFlowers(seedlingsData)
+        setMySeedlings(cleanedSeedlings)
+    }
+
     useEffect(() => {
-        getAllFlowers()
+        console.log('in here')
+        // getAllFlowers()
+        getAllSeedlings()
     }, [])
+
+console.log('mySeedlings', mySeedlings)
 
     return (
         <StyledHome >
             <h1>bLOOMbABY</h1>
-            {myFlowers && <SeedSelector plantFlower={plantFlower} myFlowers={myFlowers}/>}
+            {myFlowers.length === 0 ?
+             mySeedlings && <SeedSelector plantFlower={plantFlower} seedlings={mySeedlings}/>
+            :
+            <Flowers myFlowers={myFlowers} />}
         </StyledHome>
     )
 }

@@ -1,4 +1,4 @@
-const seedlings = [
+const seedlingsData = [
     {
         type: 'flower1',
         name: 'rose',
@@ -40,5 +40,5 @@ const seedlings = [
     }
 ];
 
-export default seedlings
+export { seedlingsData }
 
