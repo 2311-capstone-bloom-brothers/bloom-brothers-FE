@@ -16,3 +16,7 @@ jobs:
         with:
           build: npm run build
           start: npm start
+      - name: Run ESLint
+        env:
+          CI: false
+        run: npm run lint
