@@ -1,12 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
-// import { customShaderMaterial } from '../../functions/CustomShaderMaterial';
 import { useFrame } from '@react-three/fiber';
+import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
 
 const Stem = ({ onTopPointComputed, flower, color }) => {
   const tubeRef = useRef();
-  const materialRef = useRef()
-    let topPoint;
+  const materialRef = useRef();
+  const topPointRef = useRef(null);
+
+  console.log(CustomShaderMaterial)
 
   useFrame((state, delta) => {
     if (materialRef.current) {
@@ -25,24 +27,24 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
     const radius = 0.14;
     const radialSegments = 8;
     const closed = false;
-        topPoint = pathPoints.getPointAt(1);
+    topPointRef.current = pathPoints.getPointAt(1);
     const tubeGeometry = new TubeGeometry(pathPoints, tubularSegments, radius, radialSegments, closed);
 
     if (tubeRef.current) {
       tubeRef.current.geometry = tubeGeometry;
     }
 
-        if (topPoint) {
-            // Calculate the direction and angle at the top of the stem
-            const lastPoint = pointsArray[pointsArray.length - 1];
-            const secondLastPoint = pointsArray[pointsArray.length - 2];
-            const direction = new Vector3().subVectors(lastPoint, secondLastPoint).normalize();
-            const angle = Math.atan2(direction.y, direction.x);
+    if (topPointRef.current) {
+      // Calculate the direction and angle at the top of the stem
+      const lastPoint = pointsArray[pointsArray.length - 1];
+      const secondLastPoint = pointsArray[pointsArray.length - 2];
+      const direction = new Vector3().subVectors(lastPoint, secondLastPoint).normalize();
+      const angle = Math.atan2(direction.y, direction.x);
 
-            // Pass the top point and angle to the parent component
-            onTopPointComputed(topPoint, angle);
-        }
-    }, [flower]);
+      // Pass the top point and angle to the parent component
+      onTopPointComputed(topPointRef.current, angle);
+    }
+  }, [flower, onTopPointComputed]);
 
   return (
     <mesh ref={tubeRef} position={[0, 0, 0]} rotation={[0, 0, 0]}>
@@ -51,4 +53,4 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
   );
 };
 
-export default Stem;
+export default Stem;  

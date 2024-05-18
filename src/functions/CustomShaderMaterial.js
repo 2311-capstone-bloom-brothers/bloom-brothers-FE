@@ -1,4 +1,3 @@
-// CustomShaderMaterial.js
 import * as THREE from 'three';
 import { shaderMaterial } from '@react-three/drei';
 import { extend } from '@react-three/fiber';
@@ -7,7 +6,6 @@ import glsl from 'babel-plugin-glsl/macro';
 // Vertex Shader
 const vertexShader = glsl`
   varying vec2 vUv;
-  varying vec3 vTransformed;
   uniform float uTime;
 
   // Simplex Perlin Noise Function
@@ -87,10 +85,9 @@ const vertexShader = glsl`
     vUv = uv;
     vec3 pos = position;
     float displacement = noise(vec3(position * 0.5 + uTime * 0.5));
-    pos.x += displacement * 0.1; // Apply displacement to x
-    pos.y += displacement * 0.1; // Apply displacement to y
-    pos.z += displacement * 0.1; // Apply displacement to z
-    vTransformed = pos;
+    pos.x += displacement * 0.5; // Apply displacement to x
+    pos.y += displacement * 0.5; // Apply displacement to y
+    pos.z += displacement * 0.5; // Apply displacement to z
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
   }
 `;
@@ -111,8 +108,7 @@ const CustomShaderMaterial = shaderMaterial(
   {
     uTime: 0,
     uColor: new THREE.Color(0.26, 0.73, 0.05),
-    uTopPosition: new THREE.Vector3(0, 0, 0),
-  }, // Initialize with a default color and top position
+  },
   vertexShader,
   fragmentShader
 );

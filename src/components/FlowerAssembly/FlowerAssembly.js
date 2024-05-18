@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Canvas, useFrame, extend } from '@react-three/fiber';
 import { OrbitControls, Sky, OrthographicCamera, Billboard, Text } from '@react-three/drei';
 import { StyledFlowerAssembly } from './FlowerAssembly.styled';
@@ -39,16 +39,16 @@ export default function FlowerAssembly({ flower, seedling }) {
     const [lifeCycle, setLifeCycle] = useState();
     const [stage, setStage] = useState();
     const [plantAge, setPlantAge] = useState();
-    const [currentTime, setCurrentTime] = useState()
+    const [currentTime, setCurrentTime] = useState();
 
-    const stages = ['seedling', 'blooming', 'thriving', 'wilting', 'dead'];
-    const stageDurations = lifeCycle / stages.length;
+    const stages = useMemo(() => ['seedling', 'blooming', 'thriving', 'wilting', 'dead'], []);
+    const stageDurations = useMemo(() => lifeCycle / stages.length, [lifeCycle, stages.length]);
 
-    const getCurrentStage = () => {
+    const getCurrentStage = useCallback(() => {
         const timeElapsed = Date.now() - planted;
         const stageIndex = Math.floor(timeElapsed / stageDurations);
         return stages[Math.min(stageIndex, stages.length - 1)];
-    };
+    }, [planted, stageDurations, stages]);
 
     useEffect(() => {
         if (flower) {
@@ -61,35 +61,32 @@ export default function FlowerAssembly({ flower, seedling }) {
     }, [flower]);
 
     useEffect(() => {
-        setPlanted(Date.now())
-        setLifeCycle(10000)
-        setStage('thriving')
-    }, [])
+        setPlanted(Date.now());
+        setLifeCycle(10000);
+        setStage('thriving');
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
-            let timeElapsed = Date.now() - planted;
-            let stageIndex = Math.floor(timeElapsed / stageDurations);
-            if (stageIndex < 5) {
+            const timeElapsed = Date.now() - planted;
+            const stageIndex = Math.floor(timeElapsed / stageDurations);
+            if (stageIndex < stages.length) {
                 setCurrentTime(Date.now());
-                setStage(getCurrentStage(stageIndex));
+                setStage(getCurrentStage());
             } else {
-                stageIndex = 0;
-                timeElapsed = Date.now() - planted;
                 setPlanted(Date.now());
                 setCurrentTime(Date.now());
-                setStage(getCurrentStage(stageIndex));
+                setStage(getCurrentStage());
             }
-            console.log(currentTime)
-        }, 1000); 
+            console.log(currentTime);
+        }, 1000);
 
         return () => clearInterval(interval);
-    }, [planted, lifeCycle]);
+    }, [planted, lifeCycle, getCurrentStage, stageDurations, stages.length, currentTime]);
 
     const handleTopPoint = (point, angle) => {
-        const bloomAngle = angle;
         setTopPoint(point);
-        setBloomAngle(bloomAngle);
+        setBloomAngle(angle);
     };
 
     return (
