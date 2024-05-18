@@ -1,15 +1,14 @@
 import { Route, Routes } from 'react-router-dom'
+// import Home from '../OldHomeHome/OldHome';
 import Home from '../Home/Home';
-import Landing from '../Landing/Landing';
 import seedlings from '../../seedlings-dummy';
 
 function App() {
 
- 
-
   return (
     <Routes>
-      <Route path='/' element={<Landing seedlings={seedlings}/>} />
+      <Route path='/' element={<Home seedlings={seedlings}/>} />
+      <Route path='/home' element={<Home seedlings={seedlings}/>} />
     </Routes>
   )
 }

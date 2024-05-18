@@ -1,69 +1,39 @@
 import { StyledHome } from "./Home.styled";
-import Flowers from '../Flowers/Flowers';
-import SeedSelector from '../SeedSelector/SeedSelector';
-import userFlowers from "../../userFlowers-dummy";
-import { useState, useEffect } from 'react'
+import SeedSelector from "../SeedSelector/SeedSelector";
+import * as flowerConverter from '../../functions/convertFlowerObject'
+import { useEffect, useState } from "react";
+import { seedlings } from '../../seedlings-dummy'
 
-export default function Home() {
+export default function Home({ seedlings }) {
     const [ myFlowers, setMyFlowers ] = useState()
+    const [ mySeedlings, setMySeedlings ] = useState()
 
-    function plantFlower() {
-        
-    }
-
-    function getComponentData(flower, component, index) {
-        const componentKeys = Object.keys(flower.phases[component])
-        const componentValues = componentKeys.map((property) => {
-          return flower.phases[component][property][index]
-        })
-    
-        const componentData = {}
-          componentKeys.forEach((componentKey, i) => {
-            componentData[componentKey] = componentValues[i]
-        })
-    
-        return componentData
-      }
-
-    const convertFlowerObject = (flower) => {  
+    function plantFlower(formData) {
         const newFlower = {
-          ...flower,
-          phases: {
-            seedling: {
-              ...getComponentData(flower, 'bloom', 0),
-              ...getComponentData(flower, 'stem', 0)
-            },
-            blooming: {
-              ...getComponentData(flower, 'bloom', 1),
-              ...getComponentData(flower, 'stem', 1)
-            },
-            thriving: {
-              ...getComponentData(flower, 'bloom', 2),
-              ...getComponentData(flower, 'stem', 2)
-            },
-            wilting: {
-              ...getComponentData(flower, 'bloom', 3),
-              ...getComponentData(flower, 'stem', 3)
-            },
-            dead: {
-              ...getComponentData(flower, 'bloom', 4),
-              ...getComponentData(flower, 'stem', 4)
-            }
-          }
+            ...seedlings[0],
+            name: formData.name,
+            description: formData.description
         }
-        
-        return newFlower
+    
+        console.log('newFlower', newFlower)
+
+        // postFlower()
+        setMyFlowers((prev) => {
+            // return [...prev, newFlower]
+            return [flowerConverter.convertFlowerObject(newFlower)]
+        })
     }
 
     function cleanFlowers(flowers) {
         return flowers.map((flower) => {
-            return convertFlowerObject(flower)
+            console.log('cleanFlowers', flowerConverter.convertFlowerObject(flower))
+            return flowerConverter.convertFlowerObject(flower)
         })
     }
 
     function getAllFlowers() {
         // getFlowers().then()
-        const cleanedFlowers = cleanFlowers(userFlowers)
+        const cleanedFlowers = cleanFlowers(seedlings)
         setMyFlowers(cleanedFlowers)
     }
 
@@ -71,19 +41,10 @@ export default function Home() {
         getAllFlowers()
     }, [])
 
-    console.log('myFlowers', myFlowers)
-
     return (
-        <main>
-            <StyledHome>
-                <h1>bLOOMbABY</h1>  
-                {myFlowers &&
-                    <>
-                        <Flowers myFlowers={myFlowers}/>
-                        <SeedSelector plantFlower={plantFlower} myFlowers={myFlowers} />
-                    </>
-                }
-            </StyledHome>
-        </main>
+        <StyledHome >
+            <h1>bLOOMbABY</h1>
+            {myFlowers && <SeedSelector plantFlower={plantFlower} myFlowers={myFlowers}/>}
+        </StyledHome>
     )
 }

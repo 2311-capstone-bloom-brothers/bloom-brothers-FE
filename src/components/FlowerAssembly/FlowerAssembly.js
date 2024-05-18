@@ -1,9 +1,21 @@
-import { useState, useEffect } from 'react';
-import Receptacle from "./Receptacle";
-import Stem from "./Stem";
-import { Canvas } from '@react-three/fiber';
+import { useState, useEffect, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sky, OrthographicCamera } from '@react-three/drei';
 import { StyledDiv } from './FlowerAssembly.styled';
+import Receptacle from "./Receptacle";
+import Stem from "./Stem";
+
+function RotatingGroup({ children }) {
+    const groupRef = useRef();
+
+    useFrame(() => {
+        if (groupRef.current) {
+            groupRef.current.rotation.y += 0.005; // Adjust this value to control the speed of rotation
+        }
+    });
+
+    return <group ref={groupRef} position={[0, -5, 0]}>{children}</group>;
+}
 
 export default function FlowerAssembly({ flower }) {
     const [planted, setPlanted] = useState(Date.now());
@@ -20,7 +32,7 @@ export default function FlowerAssembly({ flower }) {
     const getCurrentStage = () => {
         const timeElapsed = Date.now() - planted;
         const stageIndex = Math.floor(timeElapsed / stageDurations);
-        console.log(lifeCycle)
+        console.log(lifeCycle);
         return stages[Math.min(stageIndex, stages.length - 1)];
     };
 
@@ -40,18 +52,18 @@ export default function FlowerAssembly({ flower }) {
     useEffect(() => {
         const interval = setInterval(() => {
             let timeElapsed = Date.now() - planted;
-            let stageIndex = Math.floor(timeElapsed / stageDurations)
-            if(stageIndex < 5){
+            let stageIndex = Math.floor(timeElapsed / stageDurations);
+            if(stageIndex < 5) {
                 setCurrentTime(Date.now());
                 setStage(getCurrentStage(stageIndex));
             } else {
-                stageIndex = 0
-                timeElapsed = Date.now() - planted
-                setPlanted(Date.now())
+                stageIndex = 0;
+                timeElapsed = Date.now() - planted;
+                setPlanted(Date.now());
                 setCurrentTime(Date.now());
-                setStage(getCurrentStage(stageIndex))
+                setStage(getCurrentStage(stageIndex));
             }
-            console.log(stageIndex)
+            console.log(stageIndex);
         }, 1000); // Update every second
 
         return () => clearInterval(interval);
@@ -72,18 +84,18 @@ export default function FlowerAssembly({ flower }) {
                 <OrbitControls />
                 <Sky
                     distance={450000}
-                    sunPosition={[0, 0, -1]}
+                    sunPosition={[0, 1, 0]}
                     inclination={0.49}
                     azimuth={0.25}
-                    turbidity={0}
-                    rayleigh={0.01}
+                    turbidity={1}
+                    rayleigh={0.1}
                     mieCoefficient={0.005}
                     mieDirectionalG={1}
                 />
-                <group position={[0, -5, 0]}>
+                <RotatingGroup>
                     {flower && <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />}
                     {flower && <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />}
-                </group>
+                </RotatingGroup>
             </Canvas>
         </StyledDiv>
     );
