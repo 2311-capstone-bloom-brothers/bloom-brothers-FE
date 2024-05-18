@@ -20,23 +20,20 @@ export default function NewPlantForm({ plantFlower }) {
         plantFlower(formData)
     }
 
-    console.log('formData', formData)
-
-
     return (
         <StyledNewPlantForm>
             <p>you have no flowers yet. get one in the ground!</p>
             <div className="plant-form-container">
                 <div className="plant-form-labels">
                     <label>Name yer plant
-                        <input name="name" onChange={event => handleChange(event)} value={formData.name}/>
+                        <input type="text" name="name" onChange={event => handleChange(event)} value={formData.name}/>
                     </label>
                     <label>Describe yer plant
-                        <input name="description" onChange={event => handleChange(event)} value={formData.description}/>
+                        <input type="text" name="description" onChange={event => handleChange(event)} value={formData.description}/>
                     </label>
                 </div>
                 <Link to="/home">
-                    <button onClick={event => handleClick(event)}>pLANTfLOWER</button>
+                    <button type="submit" onClick={event => handleClick(event)}>pLANTfLOWER</button>
                 </Link>
             </div>
         </StyledNewPlantForm>

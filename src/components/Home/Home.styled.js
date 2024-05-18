@@ -19,4 +19,8 @@ export const StyledHome = styled.div`
         background-color: white;
         width: fit-content;
     }
+
+    .background-1 {
+        background-image: url(/assets/bw-flower-chem.jpg) !important;
+    }
 `

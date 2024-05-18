@@ -25,12 +25,16 @@ export const StyledNewPlantForm = styled.form`
         margin-left: 10px;
     }
 
-    button {
+    submit {
         cursor: pointer;
         padding: 15px;
+        background-color: white;
+        color: black;
+        text-decoration: none !important;
     }
 
     .plant-form-container {
         display: flex;
+        align-items: center;
     }
 `

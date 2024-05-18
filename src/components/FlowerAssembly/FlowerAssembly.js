@@ -32,7 +32,7 @@ export default function FlowerAssembly({ flower, seedling }) {
     const getCurrentStage = () => {
         const timeElapsed = Date.now() - planted;
         const stageIndex = Math.floor(timeElapsed / stageDurations);
-        console.log(lifeCycle);
+        // console.log(lifeCycle);
         return stages[Math.min(stageIndex, stages.length - 1)];
     };
 
@@ -63,7 +63,7 @@ export default function FlowerAssembly({ flower, seedling }) {
                 setCurrentTime(Date.now());
                 setStage(getCurrentStage(stageIndex));
             }
-            console.log(stageIndex);
+            // console.log(stageIndex);
         }, 1000); // Update every second
 
         return () => clearInterval(interval);
@@ -74,8 +74,6 @@ export default function FlowerAssembly({ flower, seedling }) {
         setTopPoint(point);
         setBloomAngle(bloomAngle);
     };
-
-    console.log('seedling', seedling)
 
     return (
         <StyledDiv>

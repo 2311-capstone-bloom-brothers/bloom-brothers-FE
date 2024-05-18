@@ -8,21 +8,19 @@ import { seedlingsData } from '../../seedlings-dummy'
 export default function Home({ seedlings }) {
     const [ myFlowers, setMyFlowers ] = useState([])
     const [ mySeedlings, setMySeedlings ] = useState()
+    const [ background, setBackground ] = useState('1')
 
     function plantFlower(formData) {
         const newFlower = {
-            ...seedlings[0],
+            ...mySeedlings[0],
             name: formData.name,
-            description: formData.description
+            description: formData.description,
+            planted: Date.now(), //generated in back end
+            type: 'flower1'
         }
-    
-        console.log('newFlower', newFlower)
 
         // postFlower()
-        setMyFlowers((prev) => {
-            // return [...prev, newFlower]
-            return [flowerConverter.convertFlowerObject(newFlower)]
-        })
+        setMyFlowers(prev => [...prev, newFlower])
     }
 
     function cleanFlowers(flowers) {
@@ -51,10 +49,8 @@ export default function Home({ seedlings }) {
         getAllSeedlings()
     }, [])
 
-console.log('mySeedlings', mySeedlings)
-
     return (
-        <StyledHome >
+        <StyledHome className={`background${background}`}>
             <h1>bLOOMbABY</h1>
             {myFlowers.length === 0 ?
              mySeedlings && <SeedSelector plantFlower={plantFlower} seedlings={mySeedlings}/>

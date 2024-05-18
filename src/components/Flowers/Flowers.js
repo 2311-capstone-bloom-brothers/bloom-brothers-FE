@@ -8,11 +8,15 @@ console.log('myFlowers in flowers', myFlowers)
     const flowers = myFlowers.map((flower) => {
         console.log('flower in flower', flower)
         return (
-            // <div className="flower-container">
+            <>
+                <section className="plant-details">
+                    <p>this is: {flower.name}</p>
+                    <p>{flower.description}</p>
+                    <p>they are {Date.now() - parseInt(flower.planted)} miliseconds old</p>
+                </section>
                 <FlowerAssembly key={flower.id} flower={flower} />
-            // </div>
+            </>
         )
-        // return <div className="flower"></div>
     })
 
     return (
