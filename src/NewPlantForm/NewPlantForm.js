@@ -6,7 +6,7 @@ export default function NewPlantForm({ plantFlower }) {
     const [ formData, setFormData ] = useState({name: '', description: ''})
 
     function handleChange(event) {
-        const newData = event.target.value
+        // const newData = event.target.value
         setFormData((prev) => {
             return {
                 ...prev,
