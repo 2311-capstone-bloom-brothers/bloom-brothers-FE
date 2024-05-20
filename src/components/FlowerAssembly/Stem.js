@@ -8,8 +8,6 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
   const materialRef = useRef();
   const topPointRef = useRef(null);
 
-  console.log(CustomShaderMaterial)
-
   useFrame((state, delta) => {
     if (materialRef.current) {
       materialRef.current.uniforms.uTime.value += delta;

@@ -84,10 +84,10 @@ const vertexShader = glsl`
   void main() {
     vUv = uv;
     vec3 pos = position;
-    float displacement = noise(vec3(position * 0.5 + uTime * 0.5));
-    pos.x += displacement * 0.5; // Apply displacement to x
-    pos.y += displacement * 0.5; // Apply displacement to y
-    pos.z += displacement * 0.5; // Apply displacement to z
+    float displacement = noise(vec3(position * 0.1 + uTime * 0.1));
+    pos.x += displacement * 0.1; // Apply displacement to x
+    pos.y += displacement * 0.1; // Apply displacement to y
+    pos.z += displacement * 0.1; // Apply displacement to z
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
   }
 `;
