@@ -44,6 +44,9 @@ export default function Home({ seedlings }) {
             <div className='background-container'>
                 <img src={'/assets/waver-background.jpg'} alt='background waves'></img>
             </div>
+            {/* <div className='background-container-2'>
+                <img src={'/assets/waver-background.jpg'} alt='background waves'></img>
+            </div> */}
             <h1>bLOOMbABY</h1>
             {myFlowers.length === 0 ?
                 mySeedlings && <SeedSelector className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
