@@ -111,7 +111,7 @@ export default function FlowerAssembly({ flower, seedling }) {
                 <RotatingGroup className='rotating-group'>
                     {flower &&
                         <>
-                    <Billboard
+                    <Billboard  
                         follow={true}
                         lockX={false}
                         lockY={false}
