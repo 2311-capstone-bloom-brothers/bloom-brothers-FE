@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Run ESLint
         env:
-          CI: false
+          CI: true
         run: npm run lint
       - name: Checkout
         uses: actions/checkout@v3
