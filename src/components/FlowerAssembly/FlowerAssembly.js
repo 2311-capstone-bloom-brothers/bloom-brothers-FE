@@ -110,15 +110,14 @@ export default function FlowerAssembly({ flower, seedling }) {
                 />
                 <RotatingGroup className='rotating-group'>
                     {flower &&
-                        <>
-                    <Billboard
+                    <Billboard className="billboard"
                         follow={true}
                         lockX={false}
                         lockY={false}
                         lockZ={false}
                     >
-                        <Text position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
-                        <Text position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
+                        <Text className="sprite-flower-desc" position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
+                        <Text className="sprite-flower-name" position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
                     </Billboard>
                             <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
                             <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />
