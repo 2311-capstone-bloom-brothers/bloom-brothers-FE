@@ -14,7 +14,7 @@ function RotatingGroup({ children }) {
 
     useFrame((state, delta) => {
         if (groupRef.current) {
-            groupRef.current.rotation.y += 0.00; // Adjust this value to control the speed of rotation
+            groupRef.current.rotation.y += 0.01; // Adjust this value to control the speed of rotation
         }
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
@@ -33,13 +33,13 @@ function RotatingGroup({ children }) {
 }
 
 export default function FlowerAssembly({ flower, seedling }) {
-    const [planted, setPlanted] = useState();
+    const [planted, setPlanted] = useState(Date.now());
     const [topPoint, setTopPoint] = useState(null);
     const [bloomAngle, setBloomAngle] = useState(null);
-    const [lifeCycle, setLifeCycle] = useState();
-    const [stage, setStage] = useState();
-    const [plantAge, setPlantAge] = useState();
-    const [currentTime, setCurrentTime] = useState();
+    const [lifeCycle, setLifeCycle] = useState(10000);
+    const [stage, setStage] = useState('thriving');
+    const [plantAge, setPlantAge] = useState(0);
+    const [currentTime, setCurrentTime] = useState(Date.now());
 
     const stages = useMemo(() => ['seedling', 'blooming', 'thriving', 'wilting', 'dead'], []);
     const stageDurations = useMemo(() => lifeCycle / stages.length, [lifeCycle, stages.length]);
@@ -47,24 +47,13 @@ export default function FlowerAssembly({ flower, seedling }) {
     const getCurrentStage = useCallback(() => {
         const timeElapsed = Date.now() - planted;
         const stageIndex = Math.floor(timeElapsed / stageDurations);
-        return stages[Math.min(stageIndex, stages.length - 1)];
-    }, [planted, stageDurations, stages]);
-
-    useEffect(() => {
-        if (flower) {
-            const interval = setInterval(() => {
-                const age = Date.now() - parseInt(flower.planted);
-                setPlantAge(age / 1000);
-            }, 1000);
-            return () => clearInterval(interval);
+        if (stageIndex >= stages.length) {
+            setPlanted(Date.now());
+            setPlantAge(0);
+            return 'seedling';
         }
-    }, [flower]);
-
-    useEffect(() => {
-        setPlanted(Date.now());
-        setLifeCycle(10000);
-        setStage('thriving');
-    }, []);
+        return stages[stageIndex];
+    }, [planted, stageDurations, stages]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -76,13 +65,23 @@ export default function FlowerAssembly({ flower, seedling }) {
             } else {
                 setPlanted(Date.now());
                 setCurrentTime(Date.now());
-                setStage(getCurrentStage());
-                console.log(currentTime);
+                setStage('seedling');
+                setPlantAge(0);
             }
         }, 1000);
 
         return () => clearInterval(interval);
     }, [planted, lifeCycle, getCurrentStage, stageDurations, stages.length, currentTime]);
+
+    useEffect(() => {
+        if (flower) {
+            const interval = setInterval(() => {
+                const age = Date.now() - planted;
+                setPlantAge(age / 1000);
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [flower, planted]);
 
     const handleTopPoint = (point, angle) => {
         setTopPoint(point);
