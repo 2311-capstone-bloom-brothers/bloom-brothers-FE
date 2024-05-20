@@ -11,8 +11,6 @@ const Receptacle = ({ flower, topPoint, bloomAngle }) => {
     const [scale, setScale] = useState();
     const materialRef = useRef();
 
-    console.log(CustomShaderMaterial)
-
 
     useFrame((state, delta) => {
         // if (materialRef.current) {
@@ -52,22 +50,22 @@ const Receptacle = ({ flower, topPoint, bloomAngle }) => {
             setFlowerPetals(petalArray);
             setReceptRadius(flower.recRadius);
         }
-        if (materialRef.current) {
-            materialRef.current.uniforms.uColor.value.set('yellow');
-        }
         setScale(1);
     }, [flower]);
-
+    
     useEffect(() => {
         generatePetals();
     }, [flower, generatePetals]);
-
+    
+    if (materialRef.current) {
+        materialRef.current.uniforms.uColor.value.set('yellow');
+    }
     return (
         <>
             <group scale={scale} position={attachPoint} rotation={[bloomAngle, 0, 0]}>
                 {flowerPetals && flowerPetals}
                 {attachPoint && (
-                    <Sphere position={[0, 0, 0]} args={[receptRadius]}>
+                    <Sphere position={[0, 0, 0]} args={[receptRadius+0.1]}>
                         {/* <meshStandardMaterial color="yellow" /> */}
                         <customShaderMaterial ref={materialRef} />
                     </Sphere>

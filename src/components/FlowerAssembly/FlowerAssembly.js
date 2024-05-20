@@ -77,8 +77,8 @@ export default function FlowerAssembly({ flower, seedling }) {
                 setPlanted(Date.now());
                 setCurrentTime(Date.now());
                 setStage(getCurrentStage());
+                console.log(currentTime);
             }
-            console.log(currentTime);
         }, 1000);
 
         return () => clearInterval(interval);
@@ -99,8 +99,8 @@ export default function FlowerAssembly({ flower, seedling }) {
                 {seedling && <OrthographicCamera makeDefault position={[100, 1000, 0]} zoom={40} />}
                 <OrbitControls />
                 <Sky
-                    distance={450000}
-                    sunPosition={[0, 1, 0]}
+                    distance={1000000}
+                    sunPosition={[0, 0.25, 0]}
                     inclination={0.49}
                     azimuth={0.25}
                     turbidity={1}
@@ -109,17 +109,17 @@ export default function FlowerAssembly({ flower, seedling }) {
                     mieDirectionalG={1}
                 />
                 <RotatingGroup className='rotating-group'>
+                    {flower &&
+                        <>
                     <Billboard
                         follow={true}
                         lockX={false}
                         lockY={false}
-                        lockZ={false} // Lock the rotation on the z axis (default=false)
+                        lockZ={false}
                     >
                         <Text position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
                         <Text position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
                     </Billboard>
-                    {flower &&
-                        <>
                             <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
                             <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />
                         </>

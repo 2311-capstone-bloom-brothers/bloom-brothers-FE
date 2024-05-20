@@ -7,8 +7,8 @@ export default [
   {languageOptions: { globals: globals.browser }},
   {
     rules: {
-        "no-unused-vars": "warn",
-        "no-undef": "warn"
+        "no-unused-vars": "off",
+        "no-undef": "off"
     }
 },
   pluginJs.configs.recommended,

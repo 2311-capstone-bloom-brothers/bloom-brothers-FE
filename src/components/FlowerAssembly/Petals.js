@@ -19,16 +19,15 @@ function Petals({ color, positionX, positionY, positionZ, flower }) {
   } = flower;
 
   const meshRef = useRef();
-
-  console.log(CustomShaderMaterial)
   
   // Memoize the noise object
   const noise = useMemo(() => new Noise(123456), []);
 
   useFrame((state, delta) => {
-    // if (materialRef.current) {
-    //     materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
-    // }
+    if (materialRef.current) {
+        materialRef.current.uniforms.uTime.value += delta; 
+        materialRef.current.uniforms.uColor.value.set('red');
+    }
   });
   
   useEffect(() => {
