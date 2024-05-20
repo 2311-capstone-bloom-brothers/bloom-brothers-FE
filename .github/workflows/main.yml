@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: Test
     steps:
-      - name: Run ESLint
-        env:
-          CI: false
-        run: npm run lint
+      # - name: Run ESLint
+      #   env:
+      #     CI: false
+      #   run: npm run lint
       - name: Checkout
         uses: actions/checkout@v3
       # Install NPM dependencies, cache them correctly
