@@ -4,6 +4,7 @@ import Flowers from "../Flowers/Flowers";
 import * as flowerConverter from '../../functions/convertFlowerObject';
 import { useEffect, useState, useCallback } from "react";
 import { seedlingsData } from '../../seedlings-dummy';
+import { postFlower } from "../../apiCalls";
 
 export default function Home({ seedlings }) {
     const [myFlowers, setMyFlowers] = useState([]);
@@ -12,14 +13,17 @@ export default function Home({ seedlings }) {
 
     function plantFlower(formData) {
         const newFlower = {
-            ...mySeedlings[0],
-            name: formData.name,
-            description: formData.description,
-            planted: Date.now(), //generated in back end
+            "name": formData.name,
+            "description": formData.description,
             type: 'flower1'
         };
 
-        setMyFlowers(prev => [...prev, newFlower]);
+        postFlower(newFlower)
+        .then(data => {
+            const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
+
+            setMyFlowers(prev => [...prev, cleanedNewFlower])
+        })
     }
 
     function cleanFlowers(flowers) {

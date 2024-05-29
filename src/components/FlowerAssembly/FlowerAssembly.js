@@ -117,7 +117,7 @@ export default function FlowerAssembly({ flower, seedling }) {
                         lockY={false}
                         lockZ={false}
                     >
-                        <Text className="sprite-flower-desc" position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
+                         <Text className="sprite-flower-desc" position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
                         <Text className="sprite-flower-name" position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
                     </Billboard>
                             <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
