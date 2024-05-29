@@ -37,7 +37,7 @@ export default function FlowerAssembly({ flower, seedling }) {
     const [topPoint, setTopPoint] = useState(null);
     const [bloomAngle, setBloomAngle] = useState(null);
     const [lifeCycle, setLifeCycle] = useState();
-    const [stage, setStage] = useState();
+    const [stage, setStage] = useState('seedling');
     const [plantAge, setPlantAge] = useState();
     const [currentTime, setCurrentTime] = useState();
 

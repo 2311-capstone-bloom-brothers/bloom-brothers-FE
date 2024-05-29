@@ -1,6 +1,4 @@
 function getComponentData(flower, component, index) {
-    console.log("🚀 ~ getComponentData ~ component:", component)
-    console.log("🚀 ~ getComponentData ~ flower:", flower)
     const componentKeys = Object.keys(flower.phases[component])
     const componentValues = componentKeys.map((property) => {
         return flower.phases[component][property][index]
