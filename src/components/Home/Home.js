@@ -114,8 +114,8 @@ export default function Home({ seedlings }) {
     const getAllFlowers = () => {
         getFlowers()
         .then(data => {
-            const cleanedFlowers = cleanFlowers(data.data)
-            setMyFlowers(cleanedFlowers)
+            // const cleanedFlowers = cleanFlowers(data.data)
+            // setMyFlowers(cleanedFlowers)
         })
     }
 
@@ -186,15 +186,15 @@ export default function Home({ seedlings }) {
 
     return (
         <StyledHome className={`home ${background}`}>
-        <button onClick={handleAnimate}>Animate Camera</button>
+        <button onClick={handleAnimate}>Animate Camera</button> 
+            <Canvas style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 60, position: [-90, 60, 100] }}>
             {myFlowers.length === 0 ?
                 mySeedlings && <SeedSelector className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
                 :
                 <Flowers className="flowers" myFlowers={myFlowers} />
             }
-            <Canvas style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 60, position: [-90, 60, 100] }}>
             <CameraController cameraRotation={cameraRotation} lookAtTarget={lookAtTarget.current} />
-            {/* <OrbitControls /> */}
+            
             <Stats showPanel={0} className="stats"/>
             <Physics gravity={[0, -0.8, 0]}>
                 {animate && <CameraAnimation />}

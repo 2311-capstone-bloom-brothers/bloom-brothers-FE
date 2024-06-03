@@ -46,7 +46,7 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
 
   return (
     <mesh ref={tubeRef} position={[0, 0, 0]} rotation={[0, 0, 0]}>
-      <customShaderMaterial ref={materialRef} />
+      <meshLambertMaterial />
     </mesh>
   );
 };

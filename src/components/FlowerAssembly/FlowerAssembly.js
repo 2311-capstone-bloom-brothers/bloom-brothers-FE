@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Canvas, useFrame, extend } from '@react-three/fiber';
-import { OrbitControls, Sky, OrthographicCamera, Billboard, Text } from '@react-three/drei';
 import { StyledFlowerAssembly } from './FlowerAssembly.styled';
 import Receptacle from "./Receptacle";
 import Stem from "./Stem";
 import { BoxGeometry } from 'three'; // Import BoxGeometry
+import Text3 from '../Text3';
+import { OrbitControls, Float, Plane, DragControls, Html, Billboard, useTexture } from '@react-three/drei';
+import { Debug, Physics, useCylinder, usePlane, useSphere, useSpring, usePointToPointConstraint, useLockConstraint } from '@react-three/cannon';
+import { useGLTF } from '@react-three/drei'
 
 extend({ BoxGeometry }); // Extend BoxGeometry
 
@@ -90,48 +93,13 @@ export default function FlowerAssembly({ flower, seedling }) {
     };
 
     return (
-        <StyledFlowerAssembly className='styled-flower-assembly'>
-            {seedling && <p className="flower-assembly">here's a sEEDbABY:</p>}
-            <Canvas className={seedling ? "seedling" : "flower"} id='flowerCanvas'>
-                <ambientLight intensity={1} />
-                <directionalLight intensity={10} castShadow position={[2, 1, 5]} shadow-mapSize={[1024, 1024]} />
-                <OrthographicCamera makeDefault position={[100, 10, 10]} zoom={30} />
-                {seedling && <OrthographicCamera makeDefault position={[100, 1000, 0]} zoom={40} />}
-                <OrbitControls />
-                <Sky
-                    distance={1000000}
-                    sunPosition={[0, 0.25, 0]}
-                    inclination={0.49}
-                    azimuth={0.25}
-                    turbidity={1}
-                    rayleigh={0.1}
-                    mieCoefficient={0.005}
-                    mieDirectionalG={1}
-                />
-                <RotatingGroup className='rotating-group'>
-                    {flower &&
-                        <>
-                    <Billboard className="billboard"
-                        follow={true}
-                        lockX={false}
-                        lockY={false}
-                        lockZ={false}
-                    >
-                         <Text className="sprite-flower-desc" position={[0, 8, 0]} fontSize={0.5} color={'black'}>{flower && flower.description}</Text>
-                        <Text className="sprite-flower-name" position={[0, 8.5, 0]} fontSize={0.5} color={'black'}>{flower && flower.name} is {flower && plantAge} sec old</Text>
-                    </Billboard>
-                            <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={flower.phases[stage]} />
-                            <Stem onTopPointComputed={handleTopPoint} flower={flower.phases[stage]} />
-                        </>
-                    }
-                    {seedling &&
-                        <>
-                            <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={seedling.phases['seedling']} />
-                            <Stem onTopPointComputed={handleTopPoint} flower={seedling.phases['seedling']} />
-                        </>
-                    }
-                </RotatingGroup>
-            </Canvas>
-        </StyledFlowerAssembly>
+        <>
+            {seedling &&
+                <>
+                    <Receptacle topPoint={topPoint} bloomAngle={bloomAngle} flower={seedling.phases['seedling']} />
+                    <Stem onTopPointComputed={handleTopPoint} flower={seedling.phases['seedling']} />
+                </>
+            }
+        </>
     );
 }
