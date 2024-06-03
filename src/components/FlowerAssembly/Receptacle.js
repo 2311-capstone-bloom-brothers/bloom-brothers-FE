@@ -2,7 +2,6 @@ import { Sphere } from "@react-three/drei";
 import Petals from "./Petals";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
-import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
 
 const Receptacle = ({ flower, topPoint, bloomAngle }) => {
     const [receptRadius, setReceptRadius] = useState();
@@ -11,12 +10,6 @@ const Receptacle = ({ flower, topPoint, bloomAngle }) => {
     const [scale, setScale] = useState();
     const materialRef = useRef();
 
-
-    useFrame((state, delta) => {
-        // if (materialRef.current) {
-        //     materialRef.current.uniforms.uTime.value += delta; // Update the time uniform
-        // }
-    });
 
     useEffect(() => {
         if (topPoint) {
@@ -67,7 +60,7 @@ const Receptacle = ({ flower, topPoint, bloomAngle }) => {
                 {attachPoint && (
                     <Sphere position={[0, 0, 0]} args={[receptRadius+0.1]}>
                         {/* <meshStandardMaterial color="yellow" /> */}
-                        <customShaderMaterial ref={materialRef} />
+                        <meshLambertMaterial color={'yellow'}/>
                     </Sphere>
                 )}
             </group>

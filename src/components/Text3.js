@@ -44,7 +44,7 @@ export default function Text3() {
   const textStrings = ['Select a flower for details!'];
 
   return (
-    <group position={[-4,0,-1]} ref={groupRef}>
+    <group position={[-4,2,-1]} ref={groupRef}>
       {textStrings.map((text, index) => (
         <mesh castShadow receiveShadow
           key={index}

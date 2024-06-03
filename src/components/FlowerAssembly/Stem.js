@@ -1,18 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
-import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
 
 const Stem = ({ onTopPointComputed, flower, color }) => {
   const tubeRef = useRef();
   const materialRef = useRef();
   const topPointRef = useRef(null);
-
-  useFrame((state, delta) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uTime.value += delta;
-    }
-  });
 
   useEffect(() => {
     let pointsArray = [];
@@ -46,7 +39,7 @@ const Stem = ({ onTopPointComputed, flower, color }) => {
 
   return (
     <mesh ref={tubeRef} position={[0, 0, 0]} rotation={[0, 0, 0]}>
-      <meshLambertMaterial />
+      <meshLambertMaterial color={'green'}/>
     </mesh>
   );
 };

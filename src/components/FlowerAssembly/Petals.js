@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { Noise } from 'noisejs';
 import { useFrame } from '@react-three/fiber';
-import { CustomShaderMaterial } from '../../functions/CustomShaderMaterial';
 
 function Petals({ color, positionX, positionY, positionZ, flower }) {
   const materialRef = useRef();
@@ -22,13 +21,6 @@ function Petals({ color, positionX, positionY, positionZ, flower }) {
   
   // Memoize the noise object
   const noise = useMemo(() => new Noise(123456), []);
-
-  useFrame((state, delta) => {
-    if (materialRef.current) {
-        materialRef.current.uniforms.uTime.value += delta; 
-        materialRef.current.uniforms.uColor.value.set('red');
-    }
-  });
   
   useEffect(() => {
     const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments);
@@ -68,7 +60,7 @@ function Petals({ color, positionX, positionY, positionZ, flower }) {
       position={[positionX, positionY, positionZ]}
     >
       {/* <meshLambertMaterial attach="material" color={color} /> */}
-      <customShaderMaterial ref={materialRef} />
+      <meshLambertMaterial color={'red'}/>
     </mesh>
   );
 }

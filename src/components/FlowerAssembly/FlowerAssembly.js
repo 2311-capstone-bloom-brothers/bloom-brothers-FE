@@ -27,10 +27,6 @@ function RotatingGroup({ children }) {
     return (
         <group ref={groupRef} position={[0, -5, 0]}>
             {children}
-            {/* <mesh>
-                <boxGeometry args={[2, 2, 2]} />
-                <customShaderMaterial ref={materialRef} />
-            </mesh> */}
         </group>
     );
 }
@@ -80,7 +76,6 @@ export default function FlowerAssembly({ flower, seedling }) {
                 setPlanted(Date.now());
                 setCurrentTime(Date.now());
                 setStage(getCurrentStage());
-                console.log(currentTime);
             }
         }, 1000);
 

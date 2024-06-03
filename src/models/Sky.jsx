@@ -81,21 +81,9 @@ const Skybox = () => {
 
 
   return (
-    <group>
-            <primitive object={sky.scene} scale={0.05} ref={skyRef}/>
-            <mesh receiveShadow ref={ground}>
-          <planeGeometry args={[10, 10, 256, 256]} />
-          <meshLambertMaterial
-            // map={textures.map}
-            // normalMap={textures.normalMap}
-            // roughnessMap={textures.roughnessMap}
-            // aoMap={textures.aoMap}
-            // displacementMap={textures.displacementMap}
-            // displacementScale={0.1}
-            color={'green'}
-          />
-        </mesh>
-    </group>
+    
+            <primitive object={sky.scene} scale={0.035} ref={skyRef}/>
+
   )
 }
 

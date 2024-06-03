@@ -11,35 +11,23 @@ import { postFlower, getFlowers } from "../../apiCalls";
 import Skybox from '../../models/Sky'
 import Environment from '../Environment/Environment'
 import DraggableObject from '../DraggableObject/DraggableObject'
-
-const CameraController = ({ cameraRotation, lookAtTarget }) => {
-    const { camera } = useThree();
-  
-    useEffect(() => {
-      camera.lookAt(...lookAtTarget);
-    }, [lookAtTarget, camera]);
-  
-    useFrame(() => {
-      camera.rotation.set(...cameraRotation);
-    });
-  
-    return null;
-  };
+import { OrbitControls } from "@react-three/drei";
   
   function CameraAnimation() {
     const { camera } = useThree();
-    const targetPosition = useRef([0, 20, 100]);
+    const targetPosition = useRef([-90, 45, 100]);
     const targetZoom = useRef(80);
     const progress = useRef(0);
   
     useFrame(() => {
       if (progress.current < 1) {
-        progress.current += 0.0001;
+        progress.current += 0.0005;
         camera.position.lerp({ x: targetPosition.current[0], y: targetPosition.current[1], z: targetPosition.current[2] }, progress.current);
         camera.zoom = camera.zoom + (targetZoom.current - camera.zoom) * 0.01;
         camera.lookAt(0, 0, 0);
         camera.updateProjectionMatrix();
       }
+      console.log(camera.position)
     });
   
     return null;
@@ -69,6 +57,67 @@ const CameraController = ({ cameraRotation, lookAtTarget }) => {
   });
 
 
+  const Ground = () => {
+
+
+    let r = Math.PI / 180;
+
+    const [ground] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [0, 0, 0],
+      rotation: [-90 * r, 0, 0],
+    }));
+  
+    const [ceiling] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [0, 10, 0],
+      rotation: [90 * r, 0, 0],
+    }));
+  
+    const [wall1] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [5, 5, 0],
+      rotation: [0, -90 * r, 0],
+    }));
+  
+    const [wall2] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [-5, 5, 0],
+      rotation: [0, 90 * r, 0],
+    }));
+  
+    const [wall3] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [0, 5, -5],
+      rotation: [0, 0, 0],
+    }));
+  
+    const [wall4] = usePlane(() => ({
+      mass: 1,
+      type: 'Static',
+      position: [0, 5, 5],
+      rotation: [r * 180, 0, 0],
+    }));
+
+
+    return (
+      <group position={[0,0,0]}>
+      <mesh receiveShadow ref={ground}>
+      <planeGeometry args={[10, 10, 256, 256]} />
+      <meshLambertMaterial
+      color={'green'}
+      />
+      </mesh>
+      </group>
+    )
+  }
+
+
 
 export default function Home({ seedlings }) {
     const [myFlowers, setMyFlowers] = useState([]);
@@ -78,12 +127,13 @@ export default function Home({ seedlings }) {
     const [numStored, setNumStored] = useState(1);
     const [storedFlowers, setStoredFlowers] = useState([]);
     const [animate, setAnimate] = useState(false);
-    const [cameraRotation, setCameraRotation] = useState([-0.52, -0.65, -0.27]);
+    const [cameraRotation, setCameraRotation] = useState([0,0,0]);
     const lookAtTarget = useRef([0, 0, 0]);
     const lightRef = useRef()
 
     let r = Math.PI / 180;
 
+  
     function plantFlower(formData) {
         const newFlower = {
             "name": formData.name,
@@ -171,45 +221,45 @@ export default function Home({ seedlings }) {
       }, [])
     
     
-      const handleCamera = (e, axis) => {
-        const value = e.target.value * r; 
-        setCameraRotation(prev => {
-          const newRotation = [...prev];
-          if (axis === 'x') newRotation[0] = value;
-          if (axis === 'y') newRotation[1] = value;
-          if (axis === 'z') newRotation[2] = value;
-          return newRotation;
-        });
-      };
+      // const handleCamera = (e, axis) => {
+      //   const value = e.target.value * r; 
+      //   setCameraRotation(prev => {
+      //     const newRotation = [...prev];
+      //     if (axis === 'x') newRotation[0] = value;
+      //     if (axis === 'y') newRotation[1] = value;
+      //     if (axis === 'z') newRotation[2] = value;
+      //     return newRotation;
+      //   });
+      // };
 
     console.log('myFlowers', myFlowers)
 
     return (
         <StyledHome className={`home ${background}`}>
         <button onClick={handleAnimate}>Animate Camera</button> 
-            <Canvas style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 60, position: [-90, 60, 100] }}>
-            {myFlowers.length === 0 ?
-                mySeedlings && <SeedSelector className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
-                :
-                <Flowers className="flowers" myFlowers={myFlowers} />
-            }
-            <CameraController cameraRotation={cameraRotation} lookAtTarget={lookAtTarget.current} />
-            
-            <Stats showPanel={0} className="stats"/>
-            <Physics gravity={[0, -0.8, 0]}>
-                {animate && <CameraAnimation />}
-                <ambientLight intensity={1} position={[0,2,0]}/>
-                <pointLight position={[-2,20,10]} intensity={30}/>
-                <directionalLight castShadow ref={lightRef} position={[-2,20,10]} intensity={1}/> 
-                {lightRef.current && <directionalLightHelper args={[lightRef.current, 5, 'red']}/>}
-                <group position={[0, 0, 0]}> 
-                <Skybox />
-                    {positions}
-                    {flowerArray}          
-                <Debug>
-                </Debug>
-                </group>
-            </Physics>
+            <Canvas style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
+              {myFlowers.length === 0 ?
+                  mySeedlings && <SeedSelector className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
+                  :
+                  <Flowers className="flowers" myFlowers={myFlowers} />
+              }
+              {/* <OrbitControls /> */}
+              <Stats showPanel={0} className="stats"/>
+              <Physics gravity={[0, -0.8, 0]}>
+                  {animate && <CameraAnimation />}
+                  <ambientLight intensity={1} position={[0,2,0]}/>
+                  <pointLight position={[-2,20,10]} intensity={30}/>
+                  <directionalLight castShadow ref={lightRef} position={[-2,20,10]} intensity={1}/> 
+                  {lightRef.current && <directionalLightHelper args={[lightRef.current, 5, 'red']}/>}
+                  <group position={[0, 0, 0]}> 
+                  <Skybox />
+                  {positions}
+                  {flowerArray}          
+                  <Debug>
+                  </Debug>
+                  </group>
+                  <Ground />
+              </Physics>
             </Canvas>   
         </StyledHome>
     );
