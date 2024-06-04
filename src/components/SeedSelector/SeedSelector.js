@@ -20,7 +20,7 @@ export default function SeedSelector({ seedlings }) {
 
     return (
         <>
-            <Text3 />
+            <Text3 onPointerDown={() => {console.log('I got clicked')}}/>
             {seedlingComponents}
             {/* <NewPlantForm plantFlower={plantFlower} /> */}
         </>

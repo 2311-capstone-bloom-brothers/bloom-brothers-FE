@@ -1,5 +1,7 @@
 import { OrbitControls, Float, Plane, DragControls, Html, Billboard, useTexture } from '@react-three/drei';
 import LatheFlower from '../../models/LatheFlower'
+import React, { useRef, useState, useMemo, useEffect } from 'react';
+import {useCylinder} from '@react-three/cannon'
 
 const DraggableObject = ({ leafDimensions, plantNodes }) => {
     const [isDragging, setIsDragging] = useState(false);

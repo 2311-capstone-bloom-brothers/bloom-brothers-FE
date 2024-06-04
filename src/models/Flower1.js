@@ -15,7 +15,7 @@ const interpolatePath = (startPath, endPath, t) => {
   return interpolatedPathArray;
 };
 
-const Stem = ({ stage, flower, nextStage, stageDurations }) => {
+const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
 
   const springRestLength = 1;
   const springStiffness = 100;
@@ -290,14 +290,14 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
       <mesh ref={tubeRef} rotation={[0, 0, 0]}>
         <meshLambertMaterial color={'green'} />
       </mesh>
-      <mesh visible={true} ref={petals}>
+      <mesh visible={false} ref={petals}>
         <meshLambertMaterial color={'blue'} />
       </mesh>
-      <mesh visible={true} ref={stemColl1}>
+      <mesh visible={false} ref={stemColl1}>
           <meshLambertMaterial color={'yellow'}/>
       </mesh>
     </group>
   );
 };
 
-export default Stem;
+export default Flower1;
