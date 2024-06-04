@@ -4,6 +4,7 @@ import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useSphere, useCylinder, useBox, usePointToPointConstraint, useLockConstraint, useDistanceConstraint, useSpring, useConeTwistConstraint } from '@react-three/cannon';
 import { Noise } from 'noisejs';
+import {MeshWobbleMaterial} from '@react-three/drei'
 
 const lerp = (start, end, t) => start + (end - start) * t;
 
@@ -58,24 +59,24 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
 
   const [petals, petalApi] = useCylinder(() => ({
     args: [petalRadius, petalRadius, petalHeight * 2.5, 100],
-    mass: 0,
+    mass: 0.1,
     position: topPoint,
     type: 'Dynamic',
     material: {
       friction: 0.5,
-      restitution: 0.1, // Reduce restitution to prevent bouncing
+      restitution: 0, // Reduce restitution to prevent bouncing
     },
     angularDamping: 0.8, // Add angular damping
   }), [topPoint, petalRadius]);
 
   useDistanceConstraint(petals, stemColl1, {
-    distance: -0.1, 
+    distance: 0, 
     stiffness: 0,
     damping: 100,
   })
 
   useDistanceConstraint(stemColl1, recPoint, {
-    distance: -0.1, 
+    distance: 0, 
     stiffness: 0,
     damping: 100,
   }, [topPoint])
@@ -274,6 +275,8 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
     if (petals.current) {
       petals.current.geometry.dispose();
       petals.current.geometry = cylinderGeometry;
+      petals.current.position.set(...topPoint);
+      setPetalRadius(petals.current.geometry.parameters.radiusTop)
     }
 
     if(stemColl1){
@@ -288,13 +291,13 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
   return (
     <group>
       <mesh ref={tubeRef} rotation={[0, 0, 0]}>
-        <meshLambertMaterial color={'green'} />
+        <MeshWobbleMaterial color={'green'} />
       </mesh>
       <mesh visible={true} ref={petals}>
-        <meshLambertMaterial color={'blue'} />
+        <MeshWobbleMaterial color={'blue'} />
       </mesh>
       <mesh visible={true} ref={stemColl1}>
-          <meshLambertMaterial color={'yellow'}/>
+          <MeshWobbleMaterial color={'yellow'}/>
       </mesh>
     </group>
   );

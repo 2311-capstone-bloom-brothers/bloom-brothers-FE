@@ -109,7 +109,7 @@ const Ground = () => {
       <mesh receiveShadow ref={ground}>
         <planeGeometry args={[10, 10, 256, 256]} />
         <meshLambertMaterial
-          color={'green'}
+          color={'lightgreen'}
         />
       </mesh>
     </group>
@@ -236,16 +236,19 @@ export default function Home({ seedlings }) {
   return (
     <StyledHome className={`home ${background}`}>
       <button onClick={handleAnimate}>Animate Camera</button>
-        <Canvas  id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
+      <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
         {/* {myFlowers.length === 0 ?
           mySeedlings && <SeedSelector onPointerDown={() => {console.log('clicked in Seed Selector')}} className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
           :
           <Flowers className="flowers" myFlowers={myFlowers} />
         } */}
         {/* {/* <Stats showPanel={0} className="stats" /> */}
-        <Physics onClick={(e) => {console.log('clicked physics', e.target)}} gravity={[0, -0.8, 0]}>
+        <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
+          
+          <Debug> 
+
           {
-            mySeedlings && <SeedSelector onClick={(e) => {console.log('clicked ss', e.target)}} className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
+            mySeedlings && <SeedSelector onClick={(e) => { console.log('clicked ss', e.target) }} className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
           }
           {animate && <CameraAnimation />}
           <ambientLight intensity={1} position={[0, 2, 0]} />
@@ -260,6 +263,7 @@ export default function Home({ seedlings }) {
             </Debug>
           </group> */}
           <Ground />
+          </Debug>
         </Physics>
       </Canvas>
     </StyledHome>
