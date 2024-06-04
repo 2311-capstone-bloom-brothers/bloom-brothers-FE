@@ -63,7 +63,7 @@ export default function Text2() {
 //     });
 //   });
 
-  const textStrings = ['hello! here are your flowers!', 'check out your garden', 'and watch them grow'];
+  const textStrings = ['here are your flowers!', 'check out your garden', 'and watch them grow'];
 
   return (
     <group position={[-1,0,-1]} ref={groupRef}>

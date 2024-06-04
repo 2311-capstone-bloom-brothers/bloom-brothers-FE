@@ -67,7 +67,7 @@ export default function Text() {
   const textStrings = ['b', 'L', 'O', 'O', 'M', 'b', 'A', 'B', 'Y'];
 
   return (
-    <group position={[-4,0,-1]} ref={groupRef}>
+    <group position={[-3,0,-1]} ref={groupRef}>
       {textStrings.map((text, index) => (
         <mesh castShadow receiveShadow
           key={index}

@@ -19,7 +19,7 @@ import { lerp } from 'three/src/math/MathUtils';
 
 function CameraAnimation() {
   const { camera } = useThree();
-  const targetPosition = useRef([-90, 45, 100]);
+  const targetPosition = useRef([-90, 55, 100]);
   const targetZoom = useRef(80);
   const progress = useRef(0);
 
@@ -28,7 +28,7 @@ function CameraAnimation() {
       progress.current += 0.0005;
       camera.position.lerp({ x: targetPosition.current[0], y: targetPosition.current[1], z: targetPosition.current[2] }, progress.current);
       camera.zoom = camera.zoom + (targetZoom.current - camera.zoom) * 0.01;
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(0, 2, 0);
       camera.updateProjectionMatrix();
     }
   });
@@ -90,7 +90,7 @@ const PlantNode = React.forwardRef(({ pos }, ref) => {
   }, [node, ref]);
 
   return (
-    <mesh visible={false} ref={node}>
+    <mesh ref={node}>
       <sphereGeometry args={[0.15]} />
       <meshLambertMaterial />
     </mesh>
@@ -169,11 +169,12 @@ export default function Home({ seedlings }) {
   const [storedFlowers, setStoredFlowers] = useState([])
   const [animate, setAnimate] = useState(false)
   const [cameraRotation, setCameraRotation] = useState([0, 0, 0])
-  const [newSeed, setNewSeed] = useState(null)
+  const [newSeedType, setNewSeedType] = useState(null)
   const lookAtTarget = useRef([0, 0, 0])
   const lightRef = useRef()
   const [showSelector, setShowSelector] = useState(true)
-
+  const [startPosition, setStartPosition] = useState()
+  const startNode = useRef()
 
   let r = Math.PI / 180;
 
@@ -199,7 +200,7 @@ export default function Home({ seedlings }) {
         const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
 
         setMyFlowers(prev => [...prev, cleanedNewFlower])
-      })
+        setNewSeedType(null)})
   }
 
   function cleanFlowers(flowers) {
@@ -242,7 +243,7 @@ export default function Home({ seedlings }) {
   function pickSeed(seedType) {
     setAnimate(true);
     setShowSelector(false)
-    setNewSeed(seedType)
+    setNewSeedType(seedType)
   }
 
   const positions = [];
@@ -274,6 +275,9 @@ export default function Home({ seedlings }) {
     }
   }, [])
 
+  if(startNode.current){
+    setStartPosition(startNode.current.position) 
+  }
 
   return (
     <StyledHome className={`home ${background}`}>
@@ -283,6 +287,7 @@ export default function Home({ seedlings }) {
           <ambientLight intensity={1} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
+          <Debug>
           <Skybox />
           <Ground />
           {animate && <CameraAnimation />}
@@ -300,8 +305,15 @@ export default function Home({ seedlings }) {
               </Float>
                 {positions}
                 {flowerArray}
+                  {newSeedType &&
+                    <>
+                      <PlantNode pos={[-10,0,-5]} ref={startNode} />
+                      <DraggableObject pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
+                    </>
+                  }
               </>       
           }
+          </Debug>
         </Physics>
       </Canvas>
     </StyledHome>

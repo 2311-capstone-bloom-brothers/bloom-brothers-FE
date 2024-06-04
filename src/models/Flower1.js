@@ -16,7 +16,7 @@ const interpolatePath = (startPath, endPath, t) => {
   return interpolatedPathArray;
 };
 
-const Stem = ({ stage, flower, nextStage, stageDurations }) => {
+const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
 
   const springRestLength = 1;
   const springStiffness = 100;
@@ -303,4 +303,4 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
   );
 };
 
-export default Stem;
+export default Flower1;
