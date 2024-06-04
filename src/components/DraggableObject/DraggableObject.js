@@ -1,5 +1,5 @@
 import { OrbitControls, Float, Plane, DragControls, Html, Billboard, useTexture } from '@react-three/drei';
-import LatheFlower from '../../models/LatheFlower'
+import Flower3 from '../../models/Flower3'
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import {useCylinder} from '@react-three/cannon'
 
@@ -115,8 +115,6 @@ const DraggableObject = ({ leafDimensions, plantNodes }) => {
             </div>
           </Html>
         )}
-        {/* <CameraLeaf castShadow position={[0, -1.6, 0]} leafDimensions={leafDimensions} /> */}
-        <LatheFlower position={[0, -3, 0]} castShadow/>
       </DragControls> 
     );
   };

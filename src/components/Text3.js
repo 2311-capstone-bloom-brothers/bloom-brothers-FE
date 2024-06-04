@@ -41,7 +41,7 @@ export default function Text3() {
   //   });
   // }, []);
 
-  const textStrings = ['Select a flower for details!'];
+  const textStrings = ['Select a flower to plant!'];
 
   return (
     <group position={[-4,2,-1]} ref={groupRef}>

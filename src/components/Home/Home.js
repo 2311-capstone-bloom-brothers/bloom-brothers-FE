@@ -12,6 +12,10 @@ import Skybox from '../../models/Sky'
 import Environment from '../Environment/Environment'
 import DraggableObject from '../DraggableObject/DraggableObject'
 import { OrbitControls } from "@react-three/drei";
+import getRandomNameCombo from "../../functions/getRandomNameCombo";
+import Text from "../Text";
+import Text2 from "../Text2";
+import { lerp } from 'three/src/math/MathUtils';
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -31,6 +35,44 @@ function CameraAnimation() {
 
   return null;
 }
+
+const easeOutCubic = (t) => (--t) * t * t + 1;
+
+const AnimatedGroup = () => {
+  const textGroupRef = useRef();
+  const progress = useRef(0);
+
+  useEffect(() => {
+    if (textGroupRef.current) {
+      textGroupRef.current.position.y = 10;
+    }
+  }, []);
+
+  useFrame(() => {
+    progress.current += .005
+    if (progress.current > 1) { progress.current = 1};
+
+    const easedProgress = easeOutCubic(progress.current);
+
+    if (textGroupRef.current) {
+      const newPosition = lerp(10, 0, easedProgress);
+      textGroupRef.current.position.y = newPosition;
+    }
+  });
+
+  return (
+    <group ref={textGroupRef}>
+      <mesh rotation={[0, ((-Math.PI / 2) - (-Math.PI / 2) * 0.02), 0]} position={[4, 4, 4]}>
+        <Text />
+      </mesh>
+      <mesh rotation={[0, ((-Math.PI / 2) * 0.02), 0]} position={[-4, 4, -4]}>
+        <Text2 />
+      </mesh>
+    </group>
+  );
+};
+
+
 
 const PlantNode = React.forwardRef(({ pos }, ref) => {
   const [node, nodeApi] = useSphere(() => ({
@@ -119,25 +161,37 @@ const Ground = () => {
 
 
 export default function Home({ seedlings }) {
-  const [myFlowers, setMyFlowers] = useState([]);
-  const [mySeedlings, setMySeedlings] = useState();
-  const [background, setBackground] = useState('1');
+  const [myFlowers, setMyFlowers] = useState([])
+  const [mySeedlings, setMySeedlings] = useState()
+  const [background, setBackground] = useState('1')
   const [leafDimensions, setLeafDimensions] = useState({ d1: 9, d2: 18, d3: 0, d4: 9, d5: 0, d6: 0, d7: 0, d8: 0, d9: 0, d10: 0, d11: 0, d12: 0, d13: 2, d14: 0.25, d15: 0.25, d16: 0.25 });
-  const [numStored, setNumStored] = useState(1);
-  const [storedFlowers, setStoredFlowers] = useState([]);
-  const [animate, setAnimate] = useState(false);
-  const [cameraRotation, setCameraRotation] = useState([0, 0, 0]);
-  const lookAtTarget = useRef([0, 0, 0]);
+  const [numStored, setNumStored] = useState(1)
+  const [storedFlowers, setStoredFlowers] = useState([])
+  const [animate, setAnimate] = useState(false)
+  const [cameraRotation, setCameraRotation] = useState([0, 0, 0])
+  const [newSeed, setNewSeed] = useState(null)
+  const lookAtTarget = useRef([0, 0, 0])
   const lightRef = useRef()
+  const [showSelector, setShowSelector] = useState(true)
+
 
   let r = Math.PI / 180;
 
+  useEffect(() => {
+    if (myFlowers.length > 0) {
+      setShowSelector(false)
+    }
+  })
 
-  function plantFlower(formData) {
+  function plantSeed(seedType) {
+    setAnimate(true)
+    const plantName = getRandomNameCombo()
+    const plantDescription = getRandomNameDescription()
     const newFlower = {
-      "name": formData.name,
-      "description": formData.description,
-      type: 'flower1'
+      name: {plantName},
+      description: `${plantDescription}`,
+      position: 'a1',
+      type: seedType
     };
 
     postFlower(newFlower)
@@ -153,7 +207,6 @@ export default function Home({ seedlings }) {
       return flowerConverter.convertFlowerObject(flower.attributes)
     })
   }
-
 
   const getAllSeedlings = () => {
     const cleanedSeedlings = cleanFlowers(seedlingsData)
@@ -186,8 +239,10 @@ export default function Home({ seedlings }) {
     }));
   }
 
-  function handleAnimate() {
+  function pickSeed(seedType) {
     setAnimate(true);
+    setShowSelector(false)
+    setNewSeed(seedType)
   }
 
   const positions = [];
@@ -220,50 +275,33 @@ export default function Home({ seedlings }) {
   }, [])
 
 
-  // const handleCamera = (e, axis) => {
-  //   const value = e.target.value * r; 
-  //   setCameraRotation(prev => {
-  //     const newRotation = [...prev];
-  //     if (axis === 'x') newRotation[0] = value;
-  //     if (axis === 'y') newRotation[1] = value;
-  //     if (axis === 'z') newRotation[2] = value;
-  //     return newRotation;
-  //   });
-  // };
-
-  // console.log('myFlowers', myFlowers)
-
   return (
     <StyledHome className={`home ${background}`}>
-      <button onClick={handleAnimate}>Animate Camera</button>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
-        {/* {myFlowers.length === 0 ?
-          mySeedlings && <SeedSelector onPointerDown={() => {console.log('clicked in Seed Selector')}} className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
-          :
-          <Flowers className="flowers" myFlowers={myFlowers} />
-        } */}
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
-          
-          <Debug> 
-
-          {
-            mySeedlings && <SeedSelector onClick={(e) => { console.log('clicked ss', e.target) }} className="seed-selector" plantFlower={plantFlower} seedlings={mySeedlings} />
-          }
-          {animate && <CameraAnimation />}
           <ambientLight intensity={1} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
-          {lightRef.current && <directionalLightHelper args={[lightRef.current, 5, 'red']} />}
           <Skybox />
-          {/* <group>  
-            <Debug>
-            {positions}
-            {flowerArray}
-            </Debug>
-          </group> */}
           <Ground />
-          </Debug>
+          {animate && <CameraAnimation />}
+          {
+            showSelector ?
+              <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
+              :
+              <>
+              <Float
+                speed={10}
+                rotationIntensity={.04}
+                floatIntensity={.06} 
+                >
+                <AnimatedGroup />
+              </Float>
+                {positions}
+                {flowerArray}
+              </>       
+          }
         </Physics>
       </Canvas>
     </StyledHome>

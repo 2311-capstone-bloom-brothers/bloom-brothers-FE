@@ -291,13 +291,13 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
   return (
     <group>
       <mesh ref={tubeRef} rotation={[0, 0, 0]}>
-        <MeshWobbleMaterial color={'green'} />
+        <meshLambertMaterial color={'green'} />
       </mesh>
       <mesh visible={true} ref={petals}>
-        <MeshWobbleMaterial color={'blue'} />
+        <meshLambertMaterial color={'blue'} />
       </mesh>
       <mesh visible={true} ref={stemColl1}>
-          <MeshWobbleMaterial color={'yellow'}/>
+          <meshLambertMaterial color={'yellow'}/>
       </mesh>
     </group>
   );

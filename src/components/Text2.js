@@ -11,7 +11,7 @@ extend({ TextGeometry });
 
 export default function Text2() {
     const groupRef = useRef(null);
-
+    const r = Math.PI / 180
 
   const textRefs = [
     useRef(null),
