@@ -8,41 +8,64 @@ import {MeshWobbleMaterial} from '@react-three/drei'
 
 const lerp = (start, end, t) => start + (end - start) * t;
 
-const interpolatePath = (startPath, endPath, t) => {
+const interpolatePath = (currentPath, endPath, t) => {
   const interpolatedPathArray = [];
-  for (let i = 0; i < startPath.length; i++) {
-    interpolatedPathArray.push(lerp(startPath[i], endPath[i], t));
+  for (let i = 0; i < currentPath.length; i++) {
+    interpolatedPathArray.push(lerp(currentPath[i], endPath[i], t));
   }
   return interpolatedPathArray;
 };
 
-const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
-
+const Flower1 = ({ flower, stage, pos}) => {
+  const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
   const springRestLength = 1;
   const springStiffness = 100;
   const springDamping = 10;
 
-
   const GROUP1 = 1 << 0
   const GROUP2 = 1 << 1
-
 
   const tubeRef = useRef();
   const colliderRef = useRef();
   const transitionProgressRef = useRef(0);
   const elapsedTimeRef = useRef(0);
-  const targetDuration = stageDurations;
+  const targetDuration = flower.lifespan / 5;
   const [topPoint, setTopPoint] = useState([0, 0, 0]);
-  const [currentPath, setCurrentPath] = useState(flower.path.flat());
-  const [startPath, setStartPath] = useState(flower.path.flat());
+  const [currentPath, setCurrentPath] = useState(null);
   const [currentFlower, setCurrentFlower] = useState(flower);
+  const [nextStage, setNextStage] = useState(null);
+  const [currentStage, setCurrentStage] = useState()
   const [startFlower, setStartFlower] = useState(flower);
   const [petalRadius, setPetalRadius] = useState(0.4)
   const [petalHeight, setPetalHeight] = useState(0.1)
 
+  const noise = useMemo(() => new Noise(123456), [])
 
 
-  const noise = useMemo(() => new Noise(123456), []);
+useEffect(() =>{
+  if(!stage) {
+    console.log(Date.now(), flower.planted)
+    let foundStage = Math.floor((Date.now() - flower.planted) / targetDuration)
+    if(foundStage > 3) {
+      foundStage = 4
+    }
+    setCurrentFlower(flower.phases[foundStage])
+      console.log('foundStage', foundStage)
+      foundStage === 4 ? setNextStage(flower.phases[flowerPhases[4]]) : setNextStage(flower.phases[flowerPhases[foundStage +1]])
+      setCurrentPath(flower.phases[[flowerPhases[foundStage]]].path.flat())
+      setCurrentStage(foundStage)
+  }
+}, [])
+
+  
+  useEffect(() => {
+    if(currentStage && !stage) {
+      setCurrentFlower(flower.phases[currentStage])
+      console.log('currentStage', currentStage)
+      currentStage === 4 ? setNextStage(flower.phases[flowerPhases[4]]) : setNextStage(flower.phases[flowerPhases[currentStage +1]])
+      setCurrentPath(flower.phases[[flowerPhases[currentStage]]].path.flat())
+    }
+  }, [currentStage])
 
   const [recPoint, recPointApi] = useBox(() => ({
     args: [1, 0.5, 0.5],
@@ -108,35 +131,36 @@ const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
 
 
   useEffect(() => {
-    if (nextStage) { 
-      setStartPath(currentPath);
-      transitionProgressRef.current = 0;
-      elapsedTimeRef.current = 0;
-      setStartFlower(currentFlower);
-    }
+      if (nextStage) { 
+        transitionProgressRef.current = 0;
+        elapsedTimeRef.current = 0;
+        setStartFlower(currentFlower);
+      }
   }, [nextStage, currentPath, currentFlower]);
 
   useEffect(() => {
-    const pointsArray = flower.path.map(point => new Vector3(point[0], point[1], point[2]));
-    const pathCurve = new CatmullRomCurve3(pointsArray);
-    const tubularSegments = 100;
-    const radius = 0.14;
-    const radialSegments = 8;
-    const closed = false;
-    const tubeGeometry = new TubeGeometry(pathCurve, tubularSegments, radius, radialSegments, closed);
-    if (tubeRef.current) {
-      tubeRef.current.geometry.dispose();
-      tubeRef.current.geometry = tubeGeometry;
-      tubeRef.current.visible = true;
+    if(!stage && currentStage) {
+      console.log(flower.phases[currentStage])
+      const pointsArray = flower.phases[flowerPhases[currentStage]].path.map(point => new Vector3(point[0], point[1], point[2]));
+      const pathCurve = new CatmullRomCurve3(pointsArray);
+      const tubularSegments = 100;
+      const radius = 0.14;
+      const radialSegments = 8;
+      const closed = false;
+      const tubeGeometry = new TubeGeometry(pathCurve, tubularSegments, radius, radialSegments, closed);
+      if (tubeRef.current) {
+        tubeRef.current.geometry.dispose();
+        tubeRef.current.geometry = tubeGeometry;
+        tubeRef.current.visible = true;
+      }
     }
-  }, [flower.path]);
+  }, [flower.path, currentStage]);
 
   useFrame((state, delta) => {
     if (nextStage && transitionProgressRef.current < 1) {
       elapsedTimeRef.current += delta * 1000;
       transitionProgressRef.current = Math.min(elapsedTimeRef.current / targetDuration, 1);
-
-      const interpolatedPath = interpolatePath(startPath, nextStage.path.flat(), transitionProgressRef.current);
+      const interpolatedPath = interpolatePath(currentPath, nextStage.path.flat(), transitionProgressRef.current);
       setCurrentPath(interpolatedPath);
 
       const pointsArray = [];
@@ -151,14 +175,13 @@ const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
       const tubeGeometry = new TubeGeometry(pathCurve, tubularSegments, radius, radialSegments, closed);
 
       if (stemCollApi1) {
-        let pathNum = 8;
+        let pathNum = 7;
         stemCollApi1.position.set(
           pathCurve.points[pathNum].x,
           pathCurve.points[pathNum].y,
           pathCurve.points[pathNum].z
         );
       }
-      
 
       // if (stemCollApi2) {
       //   let pathNum = 7;
@@ -219,6 +242,7 @@ const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
 
       const positions = cylinderGeometry.attributes.position.array;
       for (let i = 0; i < positions.length; i += 3) {
+        console.log(positions)
         const x = positions[i];
         const y = positions[i + 1];
         const z = positions[i + 2];
@@ -244,7 +268,7 @@ const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
       if(stemColl1){
         stemColl1.current.geometry = receptacleGeometry
       }
-      
+
     }
   });
 
@@ -282,21 +306,21 @@ const Flower1 = ({ stage, flower, nextStage, stageDurations }) => {
     if(stemColl1){
       stemColl1.current.geometry = receptacleGeometry
     }
-    
+
     petalApi.angularVelocity.set(0, 0, 0);
     setPetalRadius(petals.current.geometry.parameters.radiusTop)
     setPetalHeight(petals.current.geometry.parameters.height)
   }, [flower, noise]);
 
   return (
-    <group>
-      <mesh ref={tubeRef} rotation={[0, 0, 0]}>
+    <group position={pos}>
+      <mesh castShadow ref={tubeRef} rotation={[0, 0, 0]}>
         <meshLambertMaterial color={'green'} />
       </mesh>
-      <mesh visible={true} ref={petals}>
+      <mesh castShadow visible={true} ref={petals}>
         <meshLambertMaterial color={'blue'} />
       </mesh>
-      <mesh visible={true} ref={stemColl1}>
+      <mesh castShadow visible={true} ref={stemColl1}>
           <meshLambertMaterial color={'yellow'}/>
       </mesh>
     </group>

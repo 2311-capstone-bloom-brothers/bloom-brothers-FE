@@ -13,9 +13,12 @@ import Environment from '../Environment/Environment'
 import DraggableObject from '../DraggableObject/DraggableObject'
 import { OrbitControls } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
+import getRandomDescription from "../../functions/getRandomDescription";
 import Text from "../Text";
 import Text2 from "../Text2";
 import { lerp } from 'three/src/math/MathUtils';
+import Flower1 from "../../models/Flower1";
+import Flower2 from "../../models/Flower2";
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -90,7 +93,7 @@ const PlantNode = React.forwardRef(({ pos }, ref) => {
   }, [node, ref]);
 
   return (
-    <mesh ref={node}>
+    <mesh visible={false} position={pos} ref={node}>
       <sphereGeometry args={[0.15]} />
       <meshLambertMaterial />
     </mesh>
@@ -172,27 +175,29 @@ export default function Home({ seedlings }) {
   const [newSeedType, setNewSeedType] = useState(null)
   const lookAtTarget = useRef([0, 0, 0])
   const lightRef = useRef()
-  const [showSelector, setShowSelector] = useState(true)
+  const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
   const startNode = useRef()
+  
 
   let r = Math.PI / 180;
 
   useEffect(() => {
     if (myFlowers.length > 0) {
       setShowSelector(false)
+      setAnimate(true)
     }
-  })
+  }, [myFlowers])
 
-  function plantSeed(seedType) {
+  function plantSeed(seedType, position) {
     setAnimate(true)
     const plantName = getRandomNameCombo()
-    const plantDescription = getRandomNameDescription()
+    const plantDescription = getRandomDescription()
     const newFlower = {
-      name: {plantName},
-      description: `${plantDescription}`,
-      position: 'a1',
-      type: seedType
+      "name": plantName,
+      "description": `${plantDescription}`,
+      "position": position.join(),
+      "type": seedType
     };
 
     postFlower(newFlower)
@@ -200,7 +205,9 @@ export default function Home({ seedlings }) {
         const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
 
         setMyFlowers(prev => [...prev, cleanedNewFlower])
-        setNewSeedType(null)})
+        setNewSeedType(null)
+        // setShowSelector(false)
+      })
   }
 
   function cleanFlowers(flowers) {
@@ -217,8 +224,8 @@ export default function Home({ seedlings }) {
   const getAllFlowers = () => {
     getFlowers()
       .then(data => {
-        // const cleanedFlowers = cleanFlowers(data.data)
-        // setMyFlowers(cleanedFlowers)
+        const cleanedFlowers = cleanFlowers(data.data)
+        setMyFlowers(cleanedFlowers)
       })
   }
 
@@ -246,8 +253,8 @@ export default function Home({ seedlings }) {
     setNewSeedType(seedType)
   }
 
-  const positions = [];
   const plantNodes = useMemo(() => {
+    const positions = [];
     const frows = 5;
     const fcolumns = 5;
     const fspacing = 2;
@@ -262,18 +269,27 @@ export default function Home({ seedlings }) {
         positions.push(<PlantNode key={`${row}${col}`} pos={pos} ref={nodeRef} />);
       }
     }
-    return nodes;
+    return positions;
   }, []);
 
+  // const [nodePositions, setNodePositions] = useState(plantNodes)
 
-  const flowerArray = []
-  const flowerObjects = useMemo(() => {
-    const count = 1
-    const nodes = positions
-    for (let i = 0; i < count; i++) {
-      flowerArray.push(<DraggableObject key={i} leafDimensions={leafDimensions} plantNodes={plantNodes} />)
+  const chooseFlower = (flower) => {
+    console.log(flower.plant_type)
+    switch(flower.plant_type) {
+      case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower2': return <Flower2 stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
-  }, [])
+  }
+
+  const flowerObjects = useMemo(() => {
+    const flowerArray = []
+      myFlowers.forEach((flower) => {
+          flowerArray.push(chooseFlower(flower)) 
+    })
+
+    return flowerArray
+  }, [myFlowers])
 
   if(startNode.current){
     setStartPosition(startNode.current.position) 
@@ -287,7 +303,6 @@ export default function Home({ seedlings }) {
           <ambientLight intensity={1} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
-          <Debug>
           <Skybox />
           <Ground />
           {animate && <CameraAnimation />}
@@ -303,16 +318,16 @@ export default function Home({ seedlings }) {
                 >
                 <AnimatedGroup />
               </Float>
-                {positions}
-                {flowerArray}
-                  {newSeedType &&
-                    <>
-                      <PlantNode pos={[-10,0,-5]} ref={startNode} />
-                      <DraggableObject pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
-                    </>
-                  }
-              </>       
+                {plantNodes}
+                {flowerObjects}
+                {newSeedType &&
+                  <>
+                    <DraggableObject plantSeed={plantSeed} pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
+                  </>
+                }
+              </>
           }
+          <Debug>
           </Debug>
         </Physics>
       </Canvas>

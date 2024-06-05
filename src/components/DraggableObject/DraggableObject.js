@@ -8,8 +8,11 @@ import { useFrame } from '@react-three/fiber';
 import { seedlingsData } from '../../models/seedlings';
 import { convertFlowerObject } from '../../functions/convertFlowerObject';
 import * as THREE from 'three'
+import './DraggableObject.css';
 
-const DraggableObject = ({ seedType, plantNodes, pos }) => {
+
+
+const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [draggedPos, setDraggedPos] = useState([0, 5, 0]);
     const [attachNode, setAttachNode] = useState()
@@ -17,10 +20,10 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
     const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
     const infoBoxRef = useRef();
     const [thisSeedling, setThisSeedling] = useState()
+    const [thisFlower, setThisFlower] = useState()
     const rotateProg = useRef(0)
 
     let r = Math.PI / 180
-
 
     const [ref, refApi] = useCylinder(() => ({
       mass: 1,
@@ -32,8 +35,7 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
         friction: 0,
       },
     }));
-  
-  
+
     const availableNode = useMemo(() => {
       if (plantNodes.length === 0) return null;
       plantNodes.forEach(node => {
@@ -45,7 +47,7 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
         }
       });
     }, [draggedPos, plantNodes]);
-  
+
     const closestNode = useMemo(() => {
       if (plantNodes.length === 0) return null;
       let closestDistance = Infinity;
@@ -55,9 +57,9 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
           node.ref.current.visible = false
         }
         const distance = Math.sqrt(
-          Math.pow(node.position[0] - draggedPos[0], 2) +
-          Math.pow(node.position[1] - draggedPos[1], 2) +
-          Math.pow(node.position[2] - draggedPos[2], 2)
+          Math.pow(node.props.pos[0] - draggedPos[0], 2) +
+          Math.pow(node.props.pos[1] - draggedPos[1], 2) +
+          Math.pow(node.props.pos[2] - draggedPos[2], 2)
         );
         if (distance < closestDistance) {
           closestDistance = distance;
@@ -66,8 +68,8 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
       });
       return closestNode;
     }, [draggedPos, plantNodes]);
-  
-  
+
+
     useFrame(() => {
       ref.current.rotation.set(0, 0, 0);
       refApi.rotation.set(0, 0, 0);
@@ -81,14 +83,14 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
         refApi.mass.set(0);
         if(closestNode){
           closestNode.ref.current.visible = true
-          setAttachNode([...closestNode.position])
+          setAttachNode([...closestNode.props.pos])
         } else {
           closestNode.ref.current.visible = false
         }
       } else {
         rotateProg.current += .01
         refApi.rotation.set(0,rotateProg.current,0)
-        if(attachNode){
+        if(attachNode && closestNode.ref.current){
           refApi.position.set(attachNode[0],1.51,attachNode[2])
           ref.current.position.set(...attachNode)
           ref.current.isAttached = true
@@ -100,20 +102,19 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
         refApi.mass.set(1);   
       }
     });
-  
+
     const dragStart = () => {
       setIsDragging(true)
       refApi.wakeUp()
     }
-  
+
     const dragEnd = () => {
       setIsDragging(false)
       refApi.sleep()
     }
-
     return (
       <DragControls castShadow onPointerOut={() => setHovered(false)} onPointerOver={() => setHovered(true)} axisLock='y' ref={ref} onDragStart={() => dragStart()} onDragEnd={() => dragEnd()}>
-        {!hovered && (
+        {!hovered && !attachNode && (
           <Html
             position={[0,2.2,0]}  
             ref={infoBoxRef}
@@ -123,22 +124,29 @@ const DraggableObject = ({ seedType, plantNodes, pos }) => {
             </div>
           </Html>
         )}
-        {seedType === 'flower1'
-                ?
+        {!hovered && !isDragging && attachNode && (
+          <Html
+            position={[0,2.2,0]}  
+            ref={infoBoxRef}
+          >
+            <div style={{ position: 'absolute', top: 10, left: 10, padding: '5px', borderRadius: '3px' }}>
+              <button onClick={(e) => plantSeed(seedType, attachNode)} className='plant-here-button'>Plant Here?</button>
+            </div>
+          </Html>
+        )}
+        {seedType === 'flower1' &&
                 <Flower1
                   stage={'seedling'}
                   flower={convertFlowerObject(seedlingsData[0].attributes).phases.seedling}
-                  nextStage={null}
-                  stageDurations={null}
                 />
-                :
+        }
+        {seedType === 'flower2' &&         
                 <Flower2
                   stage={'seedling'}
                   flower={convertFlowerObject(seedlingsData[1].attributes).phases.seedling}
-                  nextStage={null}
-                  stageDurations={null}
                 />
-          }
+        }
+       
       </DragControls> 
     );
   };
