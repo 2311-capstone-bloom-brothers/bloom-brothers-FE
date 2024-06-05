@@ -26,6 +26,15 @@ const postFlower = (newFlower) => {
     .catch(err => console.log(err))
 }
 
+const deleteFlower = (id) => {
+
+  return fetch(`https://bloom-brothers-be-c1f874334094.herokuapp.com/api/v0/plants/${id}`, {
+    method: 'DELETE'
+  })
+    .then(response => response.json())
+    .catch(err => console.log(err))
+}
+
 
 
 export { getFlowers, postFlower }

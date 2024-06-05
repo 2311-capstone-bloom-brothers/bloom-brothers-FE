@@ -275,7 +275,7 @@ export default function Home({ seedlings }) {
   // const [nodePositions, setNodePositions] = useState(plantNodes)
 
   const chooseFlower = (flower) => {
-    console.log(flower.plant_type)
+    console.log(flower.position)
     switch(flower.plant_type) {
       case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
       case 'flower2': return <Flower2 stage={null} flower={flower} pos={flower.position.split(',')}/>
@@ -294,6 +294,14 @@ export default function Home({ seedlings }) {
   if(startNode.current){
     setStartPosition(startNode.current.position) 
   }
+
+  useEffect(() => {
+    if(!myFlowers.length){
+      setShowSelector(true)
+    } else {
+      setShowSelector(false)
+    }
+  }, [])
 
   return (
     <StyledHome className={`home ${background}`}>
