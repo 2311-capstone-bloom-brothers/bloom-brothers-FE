@@ -17,6 +17,7 @@ import getRandomDescription from "../../functions/getRandomDescription";
 import Flower1 from "../../models/Flower1";
 import Flower2 from "../../models/Flower2";
 import AnimatedGroup from "../AnimatedGroup";
+import { deleteFlower } from "../../apiCalls";
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -138,6 +139,18 @@ const Ground = () => {
   )
 }
 
+const SceneTraversal = () => {
+  const { scene } = useThree();
+
+  useEffect(() => {
+    // scene.traverse((object) => {
+    //   console.log(object);
+    // });
+  }, [scene]);
+
+  return null;
+};
+
 
 export default function Home({ seedlings }) {
   const [myFlowers, setMyFlowers] = useState([])
@@ -158,6 +171,8 @@ export default function Home({ seedlings }) {
 
   let r = Math.PI / 180;
 
+ 
+
   useEffect(() => {
     if (myFlowers.length > 0) {
       setShowSelector(false)
@@ -173,7 +188,7 @@ export default function Home({ seedlings }) {
       "name": plantName,
       "description": `${plantDescription}`,
       "position": position.join(),
-      "type": seedType
+      "type": seedType,
     };
 
     postFlower(newFlower)
@@ -188,7 +203,7 @@ export default function Home({ seedlings }) {
 
   function cleanFlowers(flowers) {
     return flowers.map((flower) => {
-      return flowerConverter.convertFlowerObject(flower.attributes)
+      return flowerConverter.convertFlowerObject(flower.attributes, flower.id)
     })
   }
 
@@ -252,9 +267,14 @@ export default function Home({ seedlings }) {
 
   const chooseFlower = (flower) => {
     switch(flower.plant_type) {
-      case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
-      case 'flower2': return <Flower2 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower1': return <Flower1 key={Date.now()} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower2': return <Flower1 key={Date.now()} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
+  }
+
+  const deleteThisFlower = (id) => {
+    deleteFlower(id)
+    getAllFlowers()
   }
 
   const flowerObjects = useMemo(() => {
@@ -286,6 +306,7 @@ export default function Home({ seedlings }) {
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
+      <SceneTraversal />
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
           <ambientLight intensity={1} position={[0, 2, 0]} />

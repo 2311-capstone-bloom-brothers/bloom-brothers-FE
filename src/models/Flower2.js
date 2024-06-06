@@ -6,7 +6,7 @@ import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
 
 function Flower2({ rotationX = 0, rotationY = 0, rotationZ = 0, scale = [0.05, 0.05, 0.05], flower, stageDurations, nextStage, stage}) {
-    // const groupRef = useRef(null);
+  // const groupRef = useRef(null);
     // const tubeRef = useRef();
 
     // const transitionProgressRef = useRef(0);

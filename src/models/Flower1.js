@@ -5,8 +5,10 @@ import { useFrame } from '@react-three/fiber';
 import { useCompoundBody, useSphere, useCylinder, useBox, usePointToPointConstraint, useLockConstraint, useDistanceConstraint, useSpring, useConeTwistConstraint } from '@react-three/cannon';
 import { Noise } from 'noisejs';
 import { MeshWobbleMaterial } from '@react-three/drei'
+import { Html } from '@react-three/drei';
+import {deleteFlower} from '../apiCalls'
 
-const Flower1 = ({ flower, stage, pos }) => {
+const Flower1 = ({ flower, stage, pos, deleteThisFlower }) => {
   const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
   const springRestLength = 1;
   const springStiffness = 100;
@@ -27,7 +29,9 @@ const Flower1 = ({ flower, stage, pos }) => {
   const [nextStageData, setNextStageData] = useState(null)
   const [flowerPosition, setFlowerPosition] = useState(null)
   const [stemHeight, setStemHeight] = useState(2)
+  const [bloomColor, setBloomColor] = useState([0,255,0]) 
   const recRef = useRef()
+  const bloomRef = useRef()
 
   useEffect(() => {
     if (!stage) {
@@ -45,12 +49,15 @@ const Flower1 = ({ flower, stage, pos }) => {
       }
       setCurrentStage(flowerPhases[foundStage])
     } else {
-      const stageIndex = flowerPhases.indexOf(stage)
-      // setCurrentStageData(flower.phases[0])
-      console.log(currentStageData, stageIndex)
-      console.log(flower)
+      
+    }
+    
+    if(flower.phases && currentStage){
+      // const stageIndex = flowerPhases.indexOf(stage)
+      setBloomColor(...flower.phases[currentStage].color)
     }
 
+      // console.log(stage)
 
   }, [flower, stage])
 
@@ -64,6 +71,25 @@ const Flower1 = ({ flower, stage, pos }) => {
       setStemHeight(currentStageData.path[currentStageData.path.length-1][1])
     }
     
+  }, [currentStageData])
+
+  useEffect(() => {
+    if(currentStageData){
+      const {noiseScale, noiseImpactX, noiseImpactY, noiseImpactZ} = currentStageData
+      const positions = bloomRef.current.geometry.attributes.position.array
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = positions[i];
+        const y = positions[i + 1];
+        const z = positions[i + 2];
+
+        positions[i] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactX) * 5;
+        positions[i + 1] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactY) * 5;
+        positions[i + 2] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactZ) * 5;
+      }
+
+      bloomRef.current.geometry.attributes.position.needsUpdate = true
+      bloomRef.current.geometry.computeVertexNormals()
+    }
   }, [currentStageData])
 
 
@@ -106,15 +132,31 @@ const Flower1 = ({ flower, stage, pos }) => {
       flowerObjApi.position.set(pos[0], pos[1], pos[2])
       flowerObj.current.positon = [pos[0], pos[1], pos[2]]
     }
-  
+
+    // console.log(flower)
 
   }, [pos, currentStageData, flowerPosition]);
 
   
 
+  useEffect(() =>{
+    if(bloomColor){
+      let r,g,b
+      
+      r = bloomColor[0] / 255
+      g = bloomColor[1] / 255 
+      b = bloomColor[2] / 255 
+      
+      bloomRef.current.material.color.setRGB(r,g,b)
+    }    
+  }, [bloomColor])
+  
 
   return (
     <group ref={flowerObj}>
+      <Html>
+        <button onClick={(e) => deleteThisFlower(flower.id)}>Delete</button>
+      </Html>
       <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
         <sphereGeometry args={[
           currentStageData ? currentStageData.recRadius * 0.5 : 0.16,
@@ -123,13 +165,13 @@ const Flower1 = ({ flower, stage, pos }) => {
         ]} />
         <meshStandardMaterial color="yellow" />
       </mesh>
-      <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
+      <mesh ref={bloomRef} castShadow position={[0,stemHeight,0]} receiveShadow >
         <cylinderGeometry args={[
           currentStageData ? currentStageData.radiusTop : 0.2,
           currentStageData ? currentStageData.radiusTop : 0.2,
           0.01
         ]} />
-        <meshStandardMaterial color={flower.BloomColor} />
+        <meshStandardMaterial color={'blue'} />
       </mesh>
       <mesh castShadow position={[0,stemHeight /2,0]} receiveShadow>
         <cylinderGeometry args={[

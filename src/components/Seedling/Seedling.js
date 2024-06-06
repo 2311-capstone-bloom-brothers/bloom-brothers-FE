@@ -25,29 +25,18 @@ const Seedling = ({ seedlingIndex, numSeedlings, seedling, flower, pickSeed }) =
         onPointerOut={(e) => { if(leafGlow) {setLeafGlow(false)}}}
         onPointerDown={(e) => pickSeed(seedling.type)}
         rotation={[0,Math.PI / 2, 0]}
-        position={!leafGlow ? [xPosition, 0.5, 0] : [xPosition, 0.7, 0]}>
+        position={!leafGlow ? [xPosition, 0, 0] : [xPosition, 0.7, 0]}>
         {leafGlow && 
             <Html ref={hover} position={[0,1.5,0]}>
                 PLANT ME!
             </Html>
         }
-            {seedling.type === 'flower1'
-                ?
                 <Flower1
                 stage={stage}
                 flower={seedling.phases[stage]}
                 nextStage={null}
                 stageDurations={null}
-                />
-                :
-                <Flower2
-                stage={stage}
-                flower={seedling.phases[stage]}
-                nextStage={null}
-                stageDurations={null}
-                />
-            }
-        
+                />   
     </mesh>
     )
 }

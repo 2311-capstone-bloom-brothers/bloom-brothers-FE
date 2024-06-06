@@ -11,9 +11,10 @@ function getComponentData(flower, component, index) {
     return componentData
 }
 
-const convertFlowerObject = (flower) => {
+const convertFlowerObject = (flower, id) => {
     const newFlower = { 
         ...flower,
+        id: id,
         phases: {
             seedling: {
                 ...getComponentData(flower, 'bloom', 0),
@@ -37,7 +38,7 @@ const convertFlowerObject = (flower) => {
             }
         }
     }
-    console.log(newFlower)
+    // console.log(flower)
     return newFlower
 }
 
