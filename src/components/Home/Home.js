@@ -277,8 +277,8 @@ export default function Home({ seedlings }) {
   const chooseFlower = (flower) => {
     console.log(flower.position)
     switch(flower.plant_type) {
-      case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
-      case 'flower2': return <Flower2 stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower1': return <Flower1 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower2': return <Flower2 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
   }
 
@@ -314,8 +314,9 @@ export default function Home({ seedlings }) {
           <Skybox />
           <Ground />
           {animate && <CameraAnimation />}
+          <Debug>
           {
-            showSelector ?
+              showSelector ?
               <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
               :
               <>
@@ -335,7 +336,6 @@ export default function Home({ seedlings }) {
                 }
               </>
           }
-          <Debug>
           </Debug>
         </Physics>
       </Canvas>
