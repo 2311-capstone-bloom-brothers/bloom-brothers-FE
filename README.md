@@ -11,13 +11,13 @@
 - `npm start` to be automatically redirected to the site
 
 ## Technologies used
-React - React Router - Javascript - JSX - CSS - Styled Components - Three.js - React Three Fiber (R3F) - React Three Drei
+React - React Router - Javascript - JSX - CSS - Styled Components - Three.js - React Three Fiber (R3F) - React Three Drei - Cypress
 
 ## Wins
 A significant achievement in this project was our successful collaboration with the backend team, a first for our group. This collaboration was pivotal in synchronizing the frontend visuals with the underlying data operations, essential for the dynamic functionalities of our application. Through regular meetings, detailed documentation, and the use of collaborative tools, we managed to bridge the gap between different technical disciplines. This allowed for a seamless integration of the 3D rendering done on the frontend with the data processing and storage handled by the backend.
 
 ## Challenges
-Tackling Three.js for the first time presented several challenges, particularly due to its unfamiliar syntax and the introduction of complex components unique to the library. Learning to navigate and apply Three.js syntax required a deliberate adjustment from more traditional web development practices, adding an initial layer of complexity to our project. Additionally, our encounter with shaders was a formidable challenge. Approaching shaders for the first time meant understanding their role in rendering and manipulating visuals directly through the GPU, a concept that was new to our team and essential for achieving the desired visual effects in our application. Furthermore, familiarizing ourselves with the vast array of new components included in Three.js, such as cameras, lights, and mesh materials, necessitated a comprehensive study and experimentation phase. These components are integral to constructing and managing 3D scenes, and mastering their use was critical for leveraging the full capabilities of Three.js in our project.
+Tackling Three.js for the first time presented several challenges, particularly due to its unfamiliar syntax and the introduction of complex components unique to the library. Aditionally, our encounter with shaders presented a steep learning curve. Approaching shaders for the first time meant understanding their role in rendering and manipulating visuals directly through the GPU, a concept that was new to our team and essential for achieving the desired visual effects in our application. Furthermore, familiarizing ourselves with the vast array of new components included in Three.js, such as cameras, lights, and mesh materials, necessitated a comprehensive study and experimentation phase. These components are integral to constructing and managing 3D scenes, as mastering their use was critical to the full capabilities of Three.js in our project.
 
 ## Up Next 
 As we look to enhance our application further, one exciting feature we plan to incorporate is a breeding mechanic. This addition will allow for the spontaneous combination of genes from two adjacent plants within the virtual garden. Our goal with this mechanic is to simulate a genetic exchange that mirrors natural breeding processes, where offspring exhibit a mix of traits from their parent plants.
@@ -28,7 +28,7 @@ As we look to enhance our application further, one exciting feature we plan to i
 - Click `E2E` testing
 - Select your prefered browser and click `Start E2E Testing`
 
-We used Cypress to ...
+We used Cypress.
 
 ### Preview
 ...
