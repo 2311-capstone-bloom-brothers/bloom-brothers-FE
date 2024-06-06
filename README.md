@@ -1,6 +1,6 @@
 # bLOOMbABY | Group Project
 **Overview:**
-Destination: Banana is a web game built around the Wikipeida API. The goal of this project was to build an application around an API, complimented by technologies new we taught ourselves to use. 
+**bLOOMbABY** leverages Three.js to create a dynamic app that procedurally generates and simulates the lifespans of plants within a virtual garden, offering nostalgic 3D visualization, efficient performance, and an engaging interactive experience. Three.js's capability to render complex plant geometries with advanced graphics effects allows for the generation of unique, realistic plants and their environments. This technology enhances user engagement through interactive manipulation and real-time growth simulations. Procedural generation ensures each plant is unique, providing scalability and flexibility to the simulation.
 
 [Check out the beta version here!]()
 
@@ -17,10 +17,10 @@ React - React Router - Javascript - JSX - CSS - Styled Components - Three.js - R
 ...
 
 ## Challenges
-...
+Tackling Three.js for the first time presented several challenges, particularly due to its unfamiliar syntax and the introduction of complex components unique to the library. Learning to navigate and apply Three.js syntax required a deliberate adjustment from more traditional web development practices, adding an initial layer of complexity to our project. Additionally, our encounter with shaders was a formidable challenge. Approaching shaders for the first time meant understanding their role in rendering and manipulating visuals directly through the GPU, a concept that was new to our team and essential for achieving the desired visual effects in our application. Furthermore, familiarizing ourselves with the vast array of new components included in Three.js, such as cameras, lights, and mesh materials, necessitated a comprehensive study and experimentation phase. These components are integral to constructing and managing 3D scenes, and mastering their use was critical for leveraging the full capabilities of Three.js in our project.
 
 ## Up Next 
-...
+As we look to enhance our application further, one exciting feature we plan to incorporate is a breeding mechanic. This addition will allow for the spontaneous combination of genes from two adjacent plants within the virtual garden. Our goal with this mechanic is to simulate a genetic exchange that mirrors natural breeding processes, where offspring exhibit a mix of traits from their parent plants.
 
 ## Testing
 - `cd` into the repo
