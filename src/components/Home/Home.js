@@ -14,11 +14,9 @@ import DraggableObject from '../DraggableObject/DraggableObject'
 import { OrbitControls } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
-import Text from "../Text";
-import Text2 from "../Text2";
-import { lerp } from 'three/src/math/MathUtils';
 import Flower1 from "../../models/Flower1";
 import Flower2 from "../../models/Flower2";
+import AnimatedGroup from "../AnimatedGroup";
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -39,43 +37,24 @@ function CameraAnimation() {
   return null;
 }
 
-const easeOutCubic = (t) => (--t) * t * t + 1;
-
-const AnimatedGroup = () => {
-  const textGroupRef = useRef();
+function ReverseAnimation() {
+  const { camera } = useThree();
+  const targetPosition = useRef([0, 20, 100]);
+  const targetZoom = useRef(80);
   const progress = useRef(0);
 
-  useEffect(() => {
-    if (textGroupRef.current) {
-      textGroupRef.current.position.y = 10;
-    }
-  }, []);
-
   useFrame(() => {
-    progress.current += .005
-    if (progress.current > 1) { progress.current = 1};
-
-    const easedProgress = easeOutCubic(progress.current);
-
-    if (textGroupRef.current) {
-      const newPosition = lerp(10, 0, easedProgress);
-      textGroupRef.current.position.y = newPosition;
+    if (progress.current < 1) {
+      progress.current += 0.0005;
+      camera.position.lerp({ x: targetPosition.current[0], y: targetPosition.current[1], z: targetPosition.current[2] }, progress.current);
+      camera.zoom = camera.zoom + (targetZoom.current - camera.zoom) * 0.01;
+      camera.lookAt(0, 2, 0);
+      camera.updateProjectionMatrix();
     }
   });
 
-  return (
-    <group ref={textGroupRef}>
-      <mesh rotation={[0, ((-Math.PI / 2) - (-Math.PI / 2) * 0.02), 0]} position={[4, 4, 4]}>
-        <Text />
-      </mesh>
-      <mesh rotation={[0, ((-Math.PI / 2) * 0.02), 0]} position={[-4, 4, -4]}>
-        <Text2 />
-      </mesh>
-    </group>
-  );
-};
-
-
+  return null;
+}
 
 const PlantNode = React.forwardRef(({ pos }, ref) => {
   const [node, nodeApi] = useSphere(() => ({
@@ -100,9 +79,7 @@ const PlantNode = React.forwardRef(({ pos }, ref) => {
   );
 });
 
-
 const Ground = () => {
-
 
   let r = Math.PI / 180;
 
@@ -160,7 +137,6 @@ const Ground = () => {
     </group>
   )
 }
-
 
 
 export default function Home({ seedlings }) {
@@ -275,7 +251,6 @@ export default function Home({ seedlings }) {
   // const [nodePositions, setNodePositions] = useState(plantNodes)
 
   const chooseFlower = (flower) => {
-    console.log(flower)
     switch(flower.plant_type) {
       case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
       case 'flower2': return <Flower2 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
@@ -303,6 +278,11 @@ export default function Home({ seedlings }) {
     }
   }, [])
 
+  function goToSeedSelector() {
+    setAnimate(false)
+    setShowSelector(true)
+  }
+
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
@@ -313,8 +293,8 @@ export default function Home({ seedlings }) {
           <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
           <Skybox />
           <Ground />
-          {animate && <CameraAnimation />}
-          <Debug>
+          {animate ? <CameraAnimation /> : <ReverseAnimation />}
+          
           {
               showSelector ?
               <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
@@ -325,7 +305,7 @@ export default function Home({ seedlings }) {
                 rotationIntensity={.04}
                 floatIntensity={.06} 
                 >
-                <AnimatedGroup />
+                <AnimatedGroup goToSeedSelector={goToSeedSelector}/>
               </Float>
                 {plantNodes}
                 {flowerObjects}
@@ -336,7 +316,9 @@ export default function Home({ seedlings }) {
                 }
               </>
           }
+          <Debug>
           </Debug>
+          {/* <OrbitControls /> */}
         </Physics>
       </Canvas>
     </StyledHome>
