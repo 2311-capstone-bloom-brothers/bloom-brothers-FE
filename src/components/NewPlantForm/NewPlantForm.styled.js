@@ -6,10 +6,13 @@ export const StyledNewPlantForm = styled.form`
     align-items: center;
     color: white;
     font-weight: bold;
-    /* background-color: white; */
+    background-color: white;
     color: black;
     font-size: 1.4em;
-
+    width: 50vw;
+    height: 50vh;
+    border-radius: 20px;
+    
     .plant-form-labels {
         display: flex;
         flex-direction: column;

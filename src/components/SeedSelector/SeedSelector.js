@@ -1,18 +1,26 @@
-import { StyledSeedSelector } from "./SeedSelector.styled";
-import FlowerAssembly from "../FlowerAssembly/FlowerAssembly"
-import NewPlantForm from "../../NewPlantForm/NewPlantForm";
+// import { StyledSeedSelector } from "./SeedSelector.styled";
+import NewPlantForm from "../NewPlantForm/NewPlantForm";
+import Text3 from "../Text3";
+import { useState, useRef, useEffect } from "react";
+import Seedling from "../Seedling/Seedling";
+import { Billboard } from "@react-three/drei";
 
-export default function SeedSelector({ plantFlower, seedlings }) {
+export default function SeedSelector({ seedlings, pickSeed }) {
 
-    const seedlingComponents = seedlings.map((seedling) => {
+
+
+    const seedlingComponents = seedlings.map((seedling, index) => {
         return (
-            <FlowerAssembly key={seedling.id} seedling={seedling} flower={null} />
+            <Seedling key={seedling.id} seedlingIndex={index} numSeedlings={seedlings.length} seedling={seedling} flower={null} pickSeed={pickSeed} />
         )
     })
+
+
     return (
-        <StyledSeedSelector className="styled-seed-selector">
+        <>
+            <Text3 onPointerDown={() => {console.log('I got clicked')}}/>
             {seedlingComponents}
-            <NewPlantForm plantFlower={plantFlower}/>
-        </StyledSeedSelector>
+            {/* <NewPlantForm plantFlower={plantFlower} /> */}
+        </>
     )
 }
