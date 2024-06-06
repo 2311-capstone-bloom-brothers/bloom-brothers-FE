@@ -37,6 +37,7 @@ const convertFlowerObject = (flower) => {
             }
         }
     }
+    console.log(newFlower)
     return newFlower
 }
 

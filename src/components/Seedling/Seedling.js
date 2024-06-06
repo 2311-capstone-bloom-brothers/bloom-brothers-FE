@@ -34,7 +34,6 @@ const Seedling = ({ seedlingIndex, numSeedlings, seedling, flower, pickSeed }) =
             {seedling.type === 'flower1'
                 ?
                 <Flower1
-                
                 stage={stage}
                 flower={seedling.phases[stage]}
                 nextStage={null}

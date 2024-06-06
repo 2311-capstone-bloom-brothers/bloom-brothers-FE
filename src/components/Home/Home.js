@@ -275,9 +275,9 @@ export default function Home({ seedlings }) {
   // const [nodePositions, setNodePositions] = useState(plantNodes)
 
   const chooseFlower = (flower) => {
-    console.log(flower.position)
+    console.log(flower)
     switch(flower.plant_type) {
-      case 'flower1': return <Flower1 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower1': return <Flower1 stage={null} flower={flower} pos={flower.position.split(',')}/>
       case 'flower2': return <Flower2 key={Date.now()} stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
   }

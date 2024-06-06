@@ -35,6 +35,6 @@ const deleteFlower = (id) => {
     .catch(err => console.log(err))
 }
 
-// deleteFlower(10)
+// deleteFlower(11)
 
 export { getFlowers, postFlower }
