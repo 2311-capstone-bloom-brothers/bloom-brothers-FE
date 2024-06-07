@@ -8,7 +8,8 @@ export default [
   {
     rules: {
         "no-unused-vars": "off",
-        "no-undef": "off"
+        "no-undef": "off",
+        "react-hooks/exhaustive-deps": "off"
     }
 },
   pluginJs.configs.recommended,
