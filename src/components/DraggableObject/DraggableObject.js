@@ -117,7 +117,7 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
         {!hovered && !attachNode && (
           <Html
             position={[0,2.2,0]}  
-            ref={infoBoxRef}
+            ref={infoBoxRef}     
           >
             <div style={{ position: 'absolute', top: 10, left: 10, padding: '5px', borderRadius: '3px' }}>
               Find my new home!

@@ -189,7 +189,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
           receptacleRadius,
           32,
           32
-        ]} />
+        ]} />    
         <meshStandardMaterial color="yellow" />
       </mesh>
       <mesh ref={bloomRef} castShadow position={[0,stemHeight,0]} receiveShadow >

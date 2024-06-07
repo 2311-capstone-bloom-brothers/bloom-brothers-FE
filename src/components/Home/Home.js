@@ -19,7 +19,7 @@ import Flower2 from "../../models/Flower2123";
 import AnimatedGroup from "../AnimatedGroup";
 import { deleteFlower } from "../../apiCalls";
 
-function CameraAnimation() {
+function CameraAnimation() {    
   const { camera } = useThree();
   const targetPosition = useRef([-90, 55, 100]);
   const targetZoom = useRef(80);

@@ -17,7 +17,7 @@ export default function AnimatedGroup({ goToSeedSelector }) {
       }
     }, []);
   
-    useFrame(() => {
+    useFrame(() => {   
       progress.current += .005
       if (progress.current > 1) { progress.current = 1};
   
