@@ -220,13 +220,14 @@ export default function Home({ seedlings }) {
       })
   }
 
+// eslint-disable-next-line
   useEffect(() => {
     getAllSeedlings()
     getAllFlowers()
     setBackground('1')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-, 
+
   function storeFlower() {
     setStoredFlowers(prev => [...prev, { [`flower${numStored}`]: leafDimensions }]);
     setNumStored(prev => prev + 1);
@@ -266,6 +267,7 @@ export default function Home({ seedlings }) {
 
   // const [nodePositions, setNodePositions] = useState(plantNodes)
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   const chooseFlower = (flower) => {
     switch(flower.plant_type) {
       case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
@@ -286,6 +288,7 @@ export default function Home({ seedlings }) {
     })
 
     return flowerArray
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myFlowers, chooseFlower])
 
   if(startNode.current){
