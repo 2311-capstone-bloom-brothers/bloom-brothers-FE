@@ -16,6 +16,7 @@ import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
 import Flower1 from "../../models/Flower1";
 import AnimatedGroup from "../AnimatedGroup";
+import Landing from '../Landing';
 import { deleteFlower } from "../../apiCalls";
 
 function CameraAnimation() {    
@@ -165,6 +166,7 @@ export default function Home({ seedlings }) {
   const lightRef = useRef()
   const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
+  const [onLanding, setOnLanding] = useState(true)
   const startNode = useRef()
   
 
@@ -216,6 +218,7 @@ export default function Home({ seedlings }) {
     getFlowers()
       .then(data => {
         const cleanedFlowers = cleanFlowers(data.data)
+        !cleanedFlowers.length && setAnimate(false)
         setMyFlowers(cleanedFlowers)
       })
   }
@@ -308,6 +311,10 @@ export default function Home({ seedlings }) {
     setShowSelector(true)
   }
 
+  function startGame() {
+    setOnLanding(false)
+  }
+
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
@@ -317,34 +324,40 @@ export default function Home({ seedlings }) {
           <ambientLight intensity={1} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
-          <Skybox />
-          <Ground />
-          {animate ? <CameraAnimation /> : <ReverseAnimation />}
-          
-          {
-            showSelector ?
-              <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
-              :
-              <>
-              <Float
-                speed={10}
-                rotationIntensity={.04}
-                floatIntensity={.06} 
-                >
-                <AnimatedGroup goToSeedSelector={goToSeedSelector}/>
-              </Float>
-                {plantNodes}
-                {flowerObjects}
-                {newSeedType &&
+          {onLanding ?
+            <Landing startGame={startGame} />
+            :
+            <>
+              <Skybox />
+              <Ground />
+              {animate ? <CameraAnimation /> : <ReverseAnimation />}
+              
+              {
+                showSelector ?
+                  <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
+                  :
                   <>
-                    <DraggableObject plantSeed={plantSeed} pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
+                  <Float
+                    speed={10}
+                    rotationIntensity={.04}
+                    floatIntensity={.06} 
+                    >
+                    <AnimatedGroup goToSeedSelector={goToSeedSelector}/>
+                  </Float>
+                    {plantNodes}
+                    {flowerObjects}
+                    {newSeedType &&
+                      <>
+                        <DraggableObject plantSeed={plantSeed} pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
+                      </>
+                    }
                   </>
-                }
-              </>
+              }
+              <Debug>
+              </Debug>
+              {/* <OrbitControls /> */}
+            </>
           }
-          <Debug>
-          </Debug>
-          {/* <OrbitControls /> */}
         </Physics>
       </Canvas>
     </StyledHome>

@@ -18,8 +18,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
   const springDamping = 10;
 
   const targetDuration = flower.lifespan / 100000;
-
- 
   const [topPoint, setTopPoint] = useState([0, 0, 0]);
 
   const noise = useMemo(() => new Noise(123456), [])
@@ -44,9 +42,9 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
 
   useEffect(() => {
     if (!stage) {
-      console.log('flower.planted', flower.planted)
-      console.log('Math.floor(Date.now() / 1000)', Math.floor(Date.now() / 1000))
-      console.log('targetDuration', targetDuration)
+      // console.log('flower.planted', flower.planted)
+      // console.log('Math.floor(Date.now() / 1000)', Math.floor(Date.now() / 1000))
+      // console.log('targetDuration', targetDuration)
 
       let foundStage = Math.floor((Math.floor(Date.now() / 1000) - flower.planted) / targetDuration)
       if (foundStage > 3) {
