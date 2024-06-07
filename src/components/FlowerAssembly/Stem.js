@@ -286,7 +286,7 @@ const Stem = ({ stage, flower, nextStage, stageDurations }) => {
     petalApi.angularVelocity.set(0, 0, 0);
     setPetalRadius(petals.current.geometry.parameters.radiusTop)
     setPetalHeight(petals.current.geometry.parameters.height)
-  }, [flower, noise]);
+  }, [flower, noise, petalApi.angularVelocity, petals, stemColl1, topPoint]);
 
   return (
     <group>

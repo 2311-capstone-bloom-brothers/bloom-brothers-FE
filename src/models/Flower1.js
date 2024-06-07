@@ -73,7 +73,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
       setFlowerId(flower.id)
     }
 
-  }, [flower, stage])
+  }, [flower, stage, currentStage, flowerPhases, targetDuration])
 
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
     }
     // console.log('targetDuration', targetDuration)
     console.log(currentStage)
-  }, [currentStageData])
+  }, [currentStageData. currentStage, stage])
 
   useEffect(() => {
     if(currentStageData && bloomRef.current){
@@ -109,7 +109,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
       bloomRef.current.geometry.attributes.position.needsUpdate = true
       bloomRef.current.geometry.computeVertexNormals()
     }
-  }, [currentStageData])
+  }, [currentStageData, noise])
 
   const [flowerObj, flowerObjApi] = useCompoundBody(() => ({
     mass: usePhysics? 0.1 : 0,
@@ -149,7 +149,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
       flowerObjApi.position.set(pos[0], pos[1], pos[2])
       flowerObj.current.positon = [pos[0], pos[1], pos[2]]
     }
-  }, [pos, currentStageData, flowerPosition]);
+  }, [pos, currentStageData, flowerPosition, flowerObj, flowerObjApi.position]);
 
   
 

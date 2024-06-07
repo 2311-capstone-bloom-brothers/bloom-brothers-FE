@@ -225,8 +225,8 @@ export default function Home({ seedlings }) {
     getAllSeedlings()
     getAllFlowers()
     setBackground('1')
-  }, [])
-
+  }, [getAllFlowers, getAllSeedlings])
+, 
   function storeFlower() {
     setStoredFlowers(prev => [...prev, { [`flower${numStored}`]: leafDimensions }]);
     setNumStored(prev => prev + 1);
@@ -270,6 +270,7 @@ export default function Home({ seedlings }) {
     switch(flower.plant_type) {
       case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
       case 'flower2': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
   }
 
@@ -285,7 +286,7 @@ export default function Home({ seedlings }) {
     })
 
     return flowerArray
-  }, [myFlowers])
+  }, [myFlowers, chooseFlower])
 
   if(startNode.current){
     setStartPosition(startNode.current.position) 
@@ -297,7 +298,7 @@ export default function Home({ seedlings }) {
     } else {
       setShowSelector(false)
     }
-  }, [])
+  }, [myFlowers.length])
 
   function goToSeedSelector() {
     setAnimate(false)

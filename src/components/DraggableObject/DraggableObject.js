@@ -46,7 +46,7 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
           return null
         }
       });
-    }, [draggedPos, plantNodes]);
+    }, [plantNodes]);
 
     const closestNode = useMemo(() => {
       if (plantNodes.length === 0) return null;

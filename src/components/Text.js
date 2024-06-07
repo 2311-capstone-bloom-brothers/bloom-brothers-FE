@@ -40,7 +40,7 @@ export default function Text() {
         geometry.translate(-center.x, -center.y, -center.z);
       }
     });
-  }, []);
+  }, [textRefs]);
 
 
     // if(groupRef.current) {
