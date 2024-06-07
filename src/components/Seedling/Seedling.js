@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect} from "react"
 import FlowerAssembly from "../FlowerAssembly/FlowerAssembly"
-import Flower2 from "../../models/Flower2123"
 import Flower1 from '../../models/Flower1'
 import { useFrame } from "@react-three/fiber"
 import { Html, Text } from "@react-three/drei"
