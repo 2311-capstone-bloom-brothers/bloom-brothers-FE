@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { StyledHome } from "./Home.styled";
 import SeedSelector from "../SeedSelector/SeedSelector";
 import Flowers from "../Flowers/Flowers";
@@ -14,6 +16,7 @@ import DraggableObject from '../DraggableObject/DraggableObject'
 import { OrbitControls, MeshWobbleMaterial } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
+import breedFlowers from "../../functions/breedFlowers";
 import Flower1 from "../../models/Flower1";
 import AnimatedGroup from "../AnimatedGroup";
 import Landing from '../Landing';
@@ -167,12 +170,17 @@ export default function Home({ seedlings }) {
   const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
   const [onLanding, setOnLanding] = useState(true)
+  const [ flowersToBreed, setFlowersToBreed ] = useState([])
+  const [ breedMode, setBreedMode ] = useState(false)
+  const [ readyToBreed, setReadyToBreed ] = useState(false)
+  const [ renderedFlowers, setRenderedFlowers ] = useState([])
+
+  
   const startNode = useRef()
   
 
   let r = Math.PI / 180;
 
- 
 
   useEffect(() => {
     if (myFlowers.length > 0) {
@@ -268,32 +276,34 @@ export default function Home({ seedlings }) {
     return positions;
   }, []);
 
-  // const [nodePositions, setNodePositions] = useState(plantNodes)
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  const chooseFlower = (flower) => {
-    switch(flower.plant_type) {
-      case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
-      case 'flower2': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
-      default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
-    }
-  }
-
   const deleteThisFlower = async (id) => {
     await deleteFlower(id)
     getAllFlowers()
   }
 
-  const flowerObjects = useMemo(() => {
-    const flowerArray = []
-      myFlowers.forEach((flower) => {
-          flowerArray.push(chooseFlower(flower)) 
-    })
+  const renderFlowers = () => {
+    const chooseFlower = (flower) => {
+      switch(flower.plant_type) {
+        case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        case 'flower2': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+      }
+    }
 
-    return flowerArray
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [myFlowers, chooseFlower])
+      const flowerArray = []
+        myFlowers.forEach((flower) => {
+            flowerArray.push(chooseFlower(flower)) 
+        })
 
+        console.log('myFlowers', myFlowers)
+  
+      setRenderedFlowers(flowerArray)
+  }
+
+  useEffect(() => {
+    renderFlowers()
+  }, [myFlowers])
+  
   if(startNode.current){
     setStartPosition(startNode.current.position) 
   }
@@ -314,6 +324,28 @@ export default function Home({ seedlings }) {
   function startGame() {
     setOnLanding(false)
   }
+
+  function toggleBreedMode() {
+    setBreedMode(prev => !prev)
+  }
+
+  function selectFlowerToBreed(id, toBreed) {
+    if(toBreed) {
+      const foundFlower = myFlowers.find(flower => flower.id === id)
+      setFlowersToBreed((prev) => [...prev, foundFlower])
+    } else {
+
+    }
+  }
+
+  useEffect(() => {
+    console.log(flowersToBreed)
+    if(flowersToBreed.length === 2) {
+      console.log('up in here')
+      setReadyToBreed(true)
+    }
+  }, [flowersToBreed])
+
 
   return (
     <StyledHome className={`home ${background}`}>
@@ -342,10 +374,10 @@ export default function Home({ seedlings }) {
                     rotationIntensity={.04}
                     floatIntensity={.06} 
                     >
-                    <AnimatedGroup goToSeedSelector={goToSeedSelector}/>
+                    <AnimatedGroup goToSeedSelector={goToSeedSelector} toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers} />
                   </Float>
                     {plantNodes}
-                    {flowerObjects}
+                    {renderedFlowers}
                     {newSeedType &&
                       <>
                         <DraggableObject plantSeed={plantSeed} pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>

@@ -10,7 +10,7 @@ import {deleteFlower} from '../apiCalls'
 import './Flower.css'
 import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }) => {
+const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode }) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
   const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
   const springRestLength = 1;
@@ -35,10 +35,10 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
   const [bloomColor, setBloomColor] = useState([0,255,0]) 
   const [flowerId, setFlowerId] = useState()
   const [receptacleRadius, setReceptacleRadius] = useState(0.16)
-
   const recRef = useRef()
   const bloomRef = useRef()
   const [canBeDeleted, setCanBeDeleted] = useState(false)
+  const [ selectedToBreed, setSelectedToBreed ] = useState(false)
 
   useEffect(() => {
     if (!stage) {
@@ -170,17 +170,36 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
   }, [bloomColor])
   
 
+  function handleClick() {
+    if(breedMode) {
+      if(!selectedToBreed){
+        console.log('in here')
+        selectFlowerToBreed(flowerId, true)
+        setSelectedToBreed(true)
+      } else {
+        selectFlowerToBreed(flowerId, false)
+        setSelectedToBreed(false)
+      }
+      
+    } else {
+      canBeDeleted ? setCanBeDeleted(false) : setCanBeDeleted(true)
+    }
+  }
+
+
   return (
-    <group onClick={(e)=> canBeDeleted ? setCanBeDeleted(false) : setCanBeDeleted(true)} ref={flowerObj}>
+    <group position={pos} onPointerDown={(e) => handleClick()}>
      {/* <Billboard position={[0,1,0]}>
       <Text>
         {currentStage}
         </Text>
      </Billboard> */}
-     {usePhysics && canBeDeleted && <Html>
-        <button className='delete-plant-button' onClick={(e) => deleteThisFlower(flowerId)}>Delete</button>
-      </Html>
-    }
+     {usePhysics &&
+        <Html>
+          {selectedToBreed && <p>selectedToBreed</p>}
+          {canBeDeleted && <button className='delete-plant-button' onClick={(e) => deleteThisFlower(flowerId)}>Delete</button>}
+        </Html>
+     }
       <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
         <sphereGeometry args={[
           receptacleRadius,

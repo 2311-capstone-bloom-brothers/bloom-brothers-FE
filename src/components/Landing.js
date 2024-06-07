@@ -12,7 +12,6 @@ extend({ TextGeometry });
 
 export default function Text({ startGame }) {
     const groupRef = useRef(null);
-
     const r = Math.PI / 180;
 
     const textRefs = [
