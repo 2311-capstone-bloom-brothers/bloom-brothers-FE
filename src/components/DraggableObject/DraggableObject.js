@@ -1,6 +1,4 @@
 import { OrbitControls, Float, Plane, DragControls, Html, Billboard, useTexture } from '@react-three/drei';
-import Flower3 from '../../models/Flower3'
-import Flower2 from "../../models/Flower2123"
 import Flower1 from '../../models/Flower1'
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import {useCylinder} from '@react-three/cannon'
