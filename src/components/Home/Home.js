@@ -224,7 +224,8 @@ export default function Home({ seedlings }) {
     getAllSeedlings()
     getAllFlowers()
     setBackground('1')
-  }, [getAllFlowers, getAllSeedlings])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 , 
   function storeFlower() {
     setStoredFlowers(prev => [...prev, { [`flower${numStored}`]: leafDimensions }]);

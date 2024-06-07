@@ -87,9 +87,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
     if(currentStageData && currentStage.recRadius){
       setReceptacleRadius(currentStage.recRadius)
     }
-    // console.log('targetDuration', targetDuration)
-    console.log(currentStage)
-  }, [currentStageData. currentStage, stage])
+  }, [currentStageData, currentStage, stage])
 
   useEffect(() => {
     if(currentStageData && bloomRef.current){
