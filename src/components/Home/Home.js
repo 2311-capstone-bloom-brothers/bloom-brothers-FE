@@ -15,7 +15,6 @@ import { OrbitControls, MeshWobbleMaterial } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
 import Flower1 from "../../models/Flower1";
-import Flower2 from "../../models/Flower2123";
 import AnimatedGroup from "../AnimatedGroup";
 import { deleteFlower } from "../../apiCalls";
 
