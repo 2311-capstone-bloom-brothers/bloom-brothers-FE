@@ -11,7 +11,7 @@
 - `npm start` to be automatically redirected to the site
 
 ## Technologies used
-React - React Router - Javascript - JSX - CSS - Styled Components - Three.js - React Three Fiber (R3F) - React Three Drei - Cypress
+React - React Router - Javascript - JSX - CSS - Styled Components - Three.js - React Three Fiber (R3F) - React Three Drei - React Three Cannon - Cypress
 
 ## Wins
 A significant achievement in this project was our successful collaboration with the backend team. This collaboration allowed us to synchronize frontend visuals with the underlying data operations, essential for the dynamic functionalities of our application. Through regular meetings, detailed documentation, and the use of collaborative tools, we managed to bridge the gap between different technical disciplines. This allowed for a seamless integration of the 3D rendering done on the frontend with the data processing and storage handled by the backend.
@@ -28,7 +28,7 @@ As we look to enhance our application further, one exciting feature we plan to i
 - Click `E2E` testing
 - Select your prefered browser and click `Start E2E Testing`
 
-We used Cypress.
+Cypress was used for E2E testing
 
 ### Preview
 ...
