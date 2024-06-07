@@ -4,21 +4,17 @@ import { TubeGeometry, CatmullRomCurve3, Vector3 } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { useCompoundBody, useSphere, useCylinder, useBox, usePointToPointConstraint, useLockConstraint, useDistanceConstraint, useSpring, useConeTwistConstraint } from '@react-three/cannon';
 import { Noise } from 'noisejs';
-import { Billboard, MeshWobbleMaterial, Text } from '@react-three/drei'
+import { MeshWobbleMaterial } from '@react-three/drei'
 import { Html } from '@react-three/drei';
 import {deleteFlower} from '../apiCalls'
-import './Flower.css'
-import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }) => {
+const Flower2 = ({ flower, stage, pos, deleteThisFlower }) => {
   const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
   const springRestLength = 1;
   const springStiffness = 100;
   const springDamping = 10;
 
-  const targetDuration = flower.lifespan / 100000;
-
- 
+  const targetDuration = flower.lifespan / 5;
   const [topPoint, setTopPoint] = useState([0, 0, 0]);
 
   const noise = useMemo(() => new Noise(123456), [])
@@ -35,18 +31,11 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
   const [stemHeight, setStemHeight] = useState(0.25)
   const [bloomColor, setBloomColor] = useState([0,255,0]) 
   const [flowerId, setFlowerId] = useState()
-  const [receptacleRadius, setReceptacleRadius] = useState(0.16)
-
   const recRef = useRef()
   const bloomRef = useRef()
-  const [canBeDeleted, setCanBeDeleted] = useState(false)
 
   useEffect(() => {
     if (!stage) {
-      console.log('flower.planted', flower.planted)
-      console.log('Math.floor(Date.now() / 1000)', Math.floor(Date.now() / 1000))
-      console.log('targetDuration', targetDuration)
-
       let foundStage = Math.floor((Math.floor(Date.now() / 1000) - flower.planted) / targetDuration)
       if (foundStage > 3) {
         foundStage = 4
@@ -82,28 +71,23 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
       for (let i = 0; i < currentStageData.path.length; i++) {
         height += currentStageData.path[i][1]
       }
-      setStemHeight(currentStageData.path[currentStageData.path.length-1][1] /1.5) 
+      setStemHeight(currentStageData.path[currentStageData.path.length-1][1])
     }
-    if(currentStageData && currentStage.recRadius){
-      setReceptacleRadius(currentStage.recRadius)
-    }
-    // console.log('targetDuration', targetDuration)
-    console.log(currentStage)
+    
   }, [currentStageData])
 
   useEffect(() => {
-    if(currentStageData && bloomRef.current){
-      const {noiseImpactX, noiseImpactY, noiseImpactZ} = currentStageData
-      const noiseScale = currentStageData.noiseScale * 0.05
+    if(currentStageData){
+      const {noiseScale, noiseImpactX, noiseImpactY, noiseImpactZ} = currentStageData
       const positions = bloomRef.current.geometry.attributes.position.array
       for (let i = 0; i < positions.length; i += 3) {
         const x = positions[i];
         const y = positions[i + 1];
         const z = positions[i + 2];
 
-        positions[i] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactX);
-        positions[i + 1] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactY);
-        positions[i + 2] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactZ);
+        positions[i] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactX) * 5;
+        positions[i + 1] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactY) * 5;
+        positions[i + 2] += (noise.perlin3(x * noiseScale, y * noiseScale, z * noiseScale) * noiseImpactZ) * 5;
       }
 
       bloomRef.current.geometry.attributes.position.needsUpdate = true
@@ -111,8 +95,10 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
     }
   }, [currentStageData])
 
+
+
   const [flowerObj, flowerObjApi] = useCompoundBody(() => ({
-    mass: usePhysics? 0.1 : 0,
+    mass: 0.1,
     type: 'Static',
     position: flowerPosition ? flowerPosition : [0, 0, 0],
     shapes: [
@@ -149,6 +135,9 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
       flowerObjApi.position.set(pos[0], pos[1], pos[2])
       flowerObj.current.positon = [pos[0], pos[1], pos[2]]
     }
+
+    // console.log(flower)
+
   }, [pos, currentStageData, flowerPosition]);
 
   
@@ -156,37 +145,24 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
   useEffect(() =>{
     if(bloomColor){
       let r,g,b
-
-      const getRandomColor = () => {
-        let min = 0
-        let max = 1
-        return Math.random() * (max - min + 1) + min;
-      }
       
-      r = getRandomColor()
-      g = getRandomColor()
-      b = getRandomColor() 
+      r = bloomColor[0] / 255
+      g = bloomColor[1] / 255 
+      b = bloomColor[2] / 255 
       
       bloomRef.current.material.color.setRGB(r,g,b)
     }    
-    
   }, [bloomColor])
   
 
   return (
-    <group onClick={(e)=> canBeDeleted ? setCanBeDeleted(false) : setCanBeDeleted(true)} ref={flowerObj}>
-     {/* <Billboard position={[0,1,0]}>
-      <Text>
-        {currentStage}
-        </Text>
-     </Billboard> */}
-     {usePhysics && canBeDeleted && <Html>
-        <button className='delete-plant-button' onClick={(e) => deleteThisFlower(flowerId)}>Delete</button>
+    <group ref={flowerObj}>
+      <Html>
+        <button onClick={(e) => deleteThisFlower(flowerId)}>Delete</button>
       </Html>
-    }
       <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
         <sphereGeometry args={[
-          receptacleRadius,
+          currentStageData ? currentStageData.recRadius * 0.5 : 0.16,
           32,
           32
         ]} />
@@ -198,27 +174,18 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }
           currentStageData ? currentStageData.radiusTop : 0.2,
           0.01
         ]} />
-        <MeshWobbleMaterial 
-        depth={10} 
-        color={'blue'} 
-        attach="material"
-        speed={1}
-        factor={0.6}
-        roughness={10}
-        metalness={0}
-        wireframe={false}
-        />
+        <meshStandardMaterial color={'blue'} />
       </mesh>
-      <mesh castShadow position={[0,stemHeight / 2,0]} receiveShadow>
+      <mesh castShadow position={[0,stemHeight /2,0]} receiveShadow>
         <cylinderGeometry args={[
           currentStageData ? currentStageData.stemWidth * 0.1 : 0.01,
           currentStageData ? currentStageData.stemWidth * 0.1 : 0.01,
           stemHeight,
           32]} />
-        <MeshWobbleMaterial color="green" />
+        <meshStandardMaterial color="green" />
       </mesh>
     </group>
   );
 };
 
-export default Flower1;
+export default Flower2;

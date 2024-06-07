@@ -1,6 +1,6 @@
 import { OrbitControls, Float, Plane, DragControls, Html, Billboard, useTexture } from '@react-three/drei';
 import Flower3 from '../../models/Flower3'
-import Flower2 from "../../models/Flower2"
+import Flower2 from "../../models/Flower2123"
 import Flower1 from '../../models/Flower1'
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import {useCylinder} from '@react-three/cannon'
@@ -27,9 +27,9 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
 
     const [ref, refApi] = useCylinder(() => ({
       mass: 1,
-      args: [1, 1, 3],
+      args: [0.50, 0.50, 0.25],
       type: 'Static',
-      position: [0, 5, 0],
+      position: [0, 1, 0],
       material: {
         restitution: 10,
         friction: 0,
@@ -136,17 +136,12 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
         )}
         {seedType === 'flower1' &&
                 <Flower1
+                usePhysics={false}
+                pos={[-10,0,-5]}
                   stage={'seedling'}
                   flower={convertFlowerObject(seedlingsData[0].attributes).phases.seedling}
                 />
-        }
-        {seedType === 'flower2' &&         
-                <Flower2
-                  stage={'seedling'}
-                  flower={convertFlowerObject(seedlingsData[1].attributes).phases.seedling}
-                />
-        }
-       
+        }       
       </DragControls> 
     );
   };

@@ -4,57 +4,47 @@ import { extend, useFrame } from '@react-three/fiber';
 import { useRef, useEffect } from 'react';
 import { Box3, Vector3 } from 'three';
 import { meshTransmissionMaterial } from '@react-three/drei';
+import { lerp } from 'three/src/math/MathUtils';
 
 import Abril from '../assets/Abril Fatface_Regular.json';
 
 extend({ TextGeometry });
 
 export default function Text3() {
-    const groupRef = useRef(null);
-
-
-  const textRefs = [
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-    useRef(null),
-  ];
-
   const font = new FontLoader().parse(Abril);
 
 
-  // useEffect(() => {
-  //   textRefs.forEach(ref => {
-  //     if (ref.current) {
-  //       const geometry = ref.current.geometry;
-  //       geometry.computeBoundingBox();
-  //       const boundingBox = geometry.boundingBox;
-  //       const center = new Vector3();
-  //       boundingBox.getCenter(center);
-  //       geometry.translate(-center.x, -center.y, -center.z);
-  //     }
-  //   });
-  // }, []);
+  const groupRef = useRef();
+  const progress = useRef(0);
 
-  const textStrings = ['Select a flower to plant!'];
+  const easeOutCubic = (t) => (--t) * t * t + 1;
+
+  useEffect(() => {
+    if (groupRef.current) {
+      groupRef.current.position.y = 10;
+    }
+  }, []);
+
+  useFrame(() => {
+    progress.current += .005
+    if (progress.current > 1) { progress.current = 1};
+
+    const easedProgress = easeOutCubic(progress.current);
+
+    if (groupRef.current) {
+      const newPosition = lerp(10, 3, easedProgress);
+      groupRef.current.position.y = newPosition;
+    }
+  });
+
+  const textString = 'Select a flower to plant!';
 
   return (
     <group position={[-4,2,-1]} ref={groupRef}>
-      {textStrings.map((text, index) => (
-        <mesh castShadow receiveShadow
-          key={index}
-          position={[0, 1 - index, 0]}
-          ref={textRefs[index]}
-        >
-          <textGeometry args={[text, { font, size: .5, depth: .2 }]} />
+        <mesh castShadow receiveShadow >
+          <textGeometry args={[textString, { font, size: .5, depth: .2 }]} />
           <meshStandardMaterial color='yellow'/>
         </mesh>
-      ))}
     </group>
   );
 }

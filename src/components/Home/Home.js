@@ -11,11 +11,11 @@ import { postFlower, getFlowers } from "../../apiCalls";
 import Skybox from '../../models/Sky'
 import Environment from '../Environment/Environment'
 import DraggableObject from '../DraggableObject/DraggableObject'
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, MeshWobbleMaterial } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
 import Flower1 from "../../models/Flower1";
-import Flower2 from "../../models/Flower2";
+import Flower2 from "../../models/Flower2123";
 import AnimatedGroup from "../AnimatedGroup";
 import { deleteFlower } from "../../apiCalls";
 
@@ -213,6 +213,7 @@ export default function Home({ seedlings }) {
   }
 
   const getAllFlowers = () => {
+    console.log('here')
     getFlowers()
       .then(data => {
         const cleanedFlowers = cleanFlowers(data.data)
@@ -267,13 +268,13 @@ export default function Home({ seedlings }) {
 
   const chooseFlower = (flower) => {
     switch(flower.plant_type) {
-      case 'flower1': return <Flower1 key={Date.now()} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
-      case 'flower2': return <Flower1 key={Date.now()} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
+      case 'flower2': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')}/>
     }
   }
 
-  const deleteThisFlower = (id) => {
-    deleteFlower(id)
+  const deleteThisFlower = async (id) => {
+    await deleteFlower(id)
     getAllFlowers()
   }
 
@@ -317,7 +318,7 @@ export default function Home({ seedlings }) {
           {animate ? <CameraAnimation /> : <ReverseAnimation />}
           
           {
-              showSelector ?
+            showSelector ?
               <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
               :
               <>

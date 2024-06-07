@@ -24,7 +24,10 @@ export default function TextButton({ goToSeedSelector }) {
 
   return (
         <mesh castShadow receiveShadow
-          position={[-1,0,-7.5]}
+          position={[-2.5,-2.5,-4.5]}
+          rotation={[0, -Math.PI/2, 0]}
+          renderOrder={0}
+          depthTest={false}
           ref={textRef}
         >
           <Html transform><button className='select-new-seed-button' onClick={handleClick}>select a new seed</button></Html>
