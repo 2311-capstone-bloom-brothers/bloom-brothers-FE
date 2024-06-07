@@ -11,6 +11,7 @@ import './Flower.css'
 import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 
 const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics }) => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
   const springRestLength = 1;
   const springStiffness = 100;

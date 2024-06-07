@@ -14,6 +14,7 @@ export default function Text() {
 
     const r = Math.PI / 180
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
   const textRefs = [
     useRef(null),
     useRef(null),
