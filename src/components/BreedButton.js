@@ -34,7 +34,7 @@ export default function BreedButton({ toggleBreedMode, readyToBreed, breedFlower
           ref={textRef}
         >
           <Html transform><button className='select-new-seed-button breed-button' onClick={handleClick}>
-            {readyToBreed ? 'BREED!!!!!' : 'Select Plants To Breed'}</button></Html>
+            {readyToBreed ? 'BREED!!!!!' : 'select plants to breed'}</button></Html>
           <textGeometry args={[textString, { font, size: .5, depth: .2 }]} />
           <meshStandardMaterial color='cyan'/>
         </mesh>

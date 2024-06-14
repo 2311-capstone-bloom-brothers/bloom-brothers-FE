@@ -3,7 +3,7 @@ const testURL = 'http://localhost:3001/api/v1/'
 const herokuURL = 'https://bloom-brothers-be-c1f874334094.herokuapp.com/api/v0/plants'
 
 function getFlowers() {
-  return fetch(herokuURL)
+  return fetch(liveURL)
     .then(resp => {
       if (!resp.ok) {
         throw new Error('Failed to load flowers')
@@ -15,14 +15,14 @@ function getFlowers() {
 
 const postFlower = (newFlower) => {
   console.log('made it here and new flower is ', newFlower)
-  return fetch(herokuURL, {
+  return fetch(liveURL, {
     method: 'POST',
     body: JSON.stringify(newFlower),
     headers: {
       'Content-Type': 'application/json',
     }
   })
-    .then(response => response.json())
+    .then(response => console.log("resp.json", response.json()))
     .catch(err => console.log(err))
 }
 

@@ -30,7 +30,7 @@ export default function TextButton({ goToSeedSelector }) {
           depthTest={false}
           ref={textRef}
         >
-          <Html transform><button className='select-new-seed-button' onClick={handleClick}>select a new seed</button></Html>
+          <Html transform zIndexRange={[0, 0]}><button style={{zIndex: 0}} className='select-new-seed-button' onClick={handleClick}>select a new seed</button></Html>
           <textGeometry args={[textString, { font, size: .5, depth: .2 }]} />
           <meshStandardMaterial color='cyan'/>
         </mesh>

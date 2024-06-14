@@ -353,17 +353,19 @@ export default function Home({ seedlings }) {
       <SceneTraversal />
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
-          <ambientLight intensity={1} position={[0, 2, 0]} />
+          <ambientLight intensity={.8} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
-          <directionalLight castShadow ref={lightRef} position={[-2, 20, 10]} intensity={1} />
+          <directionalLight castShadow ref={lightRef} position={[-2, 3, 10]} intensity={1} />
           {onLanding ?
-            <Landing startGame={startGame} />
+            <>
+              <Skybox />
+              <Landing startGame={startGame} />
+            </>
             :
             <>
               <Skybox />
               <Ground />
               {animate ? <CameraAnimation /> : <ReverseAnimation />}
-              
               {
                 showSelector ?
                   <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />

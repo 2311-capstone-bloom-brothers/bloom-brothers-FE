@@ -153,7 +153,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   useEffect(() =>{
     if(bloomColor){
       let r,g,b
-
+      console.log(bloomColor)
       const getRandomColor = () => {
         let min = 0
         let max = 1
@@ -180,7 +180,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
         selectFlowerToBreed(flowerId, false)
         setSelectedToBreed(false)
       }
-      
     } else {
       canBeDeleted ? setCanBeDeleted(false) : setCanBeDeleted(true)
     }
