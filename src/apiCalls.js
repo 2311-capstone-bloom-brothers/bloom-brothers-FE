@@ -22,7 +22,7 @@ const postFlower = (newFlower) => {
       'Content-Type': 'application/json',
     }
   })
-    .then(response => console.log("resp.json", response.json()))
+    .then(response => response.json())
     .catch(err => console.log(err))
 }
 

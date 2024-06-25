@@ -178,7 +178,6 @@ export default function Home({ seedlings }) {
   
   const startNode = useRef()
   
-
   let r = Math.PI / 180;
 
 
@@ -283,9 +282,16 @@ export default function Home({ seedlings }) {
 
   const renderFlowers = () => {
     const chooseFlower = (flower) => {
+      
       switch(flower.plant_type) {
-        case 'flower1': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
-        case 'flower2': return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        case 'flower1': {
+          console.log('in flower1 call')
+          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        }
+        case 'flower2': {
+          console.log('in flower2 call')
+          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed}/>
+        } 
         default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
       }
     }
@@ -301,6 +307,7 @@ export default function Home({ seedlings }) {
   }
 
   useEffect(() => {
+    console.log('in useEffect')
     renderFlowers()
   }, [myFlowers])
   
@@ -346,7 +353,7 @@ export default function Home({ seedlings }) {
     }
   }, [flowersToBreed])
 
-
+  console.log('renderedFlowers', renderedFlowers)
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>

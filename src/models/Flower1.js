@@ -10,14 +10,13 @@ import {deleteFlower} from '../apiCalls'
 import './Flower.css'
 import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 
+
 const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode }) => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-  const flowerPhases = ['seedling', 'blooming', 'thriving', 'wilting', 'dead']
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const springRestLength = 1;
   const springStiffness = 100;
   const springDamping = 10;
 
-  const targetDuration = flower.lifespan / 100000;
   const [topPoint, setTopPoint] = useState([0, 0, 0]);
 
   const noise = useMemo(() => new Noise(123456), [])
@@ -39,12 +38,12 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const bloomRef = useRef()
   const [canBeDeleted, setCanBeDeleted] = useState(false)
   const [ selectedToBreed, setSelectedToBreed ] = useState(false)
+  const [flowerPhases, setFlowerPhases] = useState(['seedling', 'blooming', 'thriving', 'wilting', 'dead'])
+  const [targetDuration, setTargetDuration] = useState(flower.lifespan / 100000)
 
   useEffect(() => {
+    
     if (!stage) {
-      // console.log('flower.planted', flower.planted)
-      // console.log('Math.floor(Date.now() / 1000)', Math.floor(Date.now() / 1000))
-      // console.log('targetDuration', targetDuration)
 
       let foundStage = Math.floor((Math.floor(Date.now() / 1000) - flower.planted) / targetDuration)
       if (foundStage > 3) {
@@ -71,8 +70,8 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
     if(flower){
       setFlowerId(flower.id)
     }
-
-  }, [flower, stage, currentStage, flowerPhases, targetDuration])
+      //flower, stage, currentStage, targetDuration, flowerPhases
+  }, [flower, stage, currentStage, targetDuration, flowerPhases])
 
 
   useEffect(() => {
@@ -86,6 +85,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
     if(currentStageData && currentStage.recRadius){
       setReceptacleRadius(currentStage.recRadius)
     }
+    //currentStageData, currentStage, stage
   }, [currentStageData, currentStage, stage])
 
   useEffect(() => {
@@ -106,6 +106,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
       bloomRef.current.geometry.attributes.position.needsUpdate = true
       bloomRef.current.geometry.computeVertexNormals()
     }
+    //currentStageData, noise
   }, [currentStageData, noise])
 
   const [flowerObj, flowerObjApi] = useCompoundBody(() => ({
@@ -142,11 +143,13 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
 
   useEffect(() => {
     if (pos && currentStageData) {
-      setFlowerPosition([pos[0], pos[1], pos[2]]);
+      // setFlowerPosition([pos[0], pos[1], pos[2]]);
+      console.log('pos', pos)
       flowerObjApi.position.set(pos[0], pos[1], pos[2])
       flowerObj.current.positon = [pos[0], pos[1], pos[2]]
     }
-  }, [pos, currentStageData, flowerPosition, flowerObj, flowerObjApi.position]);
+  
+  }, [pos, currentStageData, flowerObj, flowerObjApi.position]);
 
   
 
@@ -188,11 +191,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
 
   return (
     <group position={pos} onPointerDown={(e) => handleClick()}>
-     {/* <Billboard position={[0,1,0]}>
-      <Text>
-        {currentStage}
-        </Text>
-     </Billboard> */}
+
      {usePhysics &&
         <Html>
           {selectedToBreed && <p>selectedToBreed</p>}
