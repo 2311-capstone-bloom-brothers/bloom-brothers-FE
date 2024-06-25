@@ -22,7 +22,7 @@ import AnimatedGroup from "../AnimatedGroup";
 import Landing from '../Landing';
 import { deleteFlower } from "../../apiCalls";
 
-function CameraAnimation() {    
+function CameraAnimation() {
   const { camera } = useThree();
   const targetPosition = useRef([-90, 55, 100]);
   const targetZoom = useRef(80);
@@ -170,14 +170,14 @@ export default function Home({ seedlings }) {
   const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
   const [onLanding, setOnLanding] = useState(true)
-  const [ flowersToBreed, setFlowersToBreed ] = useState([])
-  const [ breedMode, setBreedMode ] = useState(false)
-  const [ readyToBreed, setReadyToBreed ] = useState(false)
-  const [ renderedFlowers, setRenderedFlowers ] = useState([])
+  const [flowersToBreed, setFlowersToBreed] = useState([])
+  const [breedMode, setBreedMode] = useState(false)
+  const [readyToBreed, setReadyToBreed] = useState(false)
+  const [renderedFlowers, setRenderedFlowers] = useState([])
 
-  
+
   const startNode = useRef()
-  
+
   let r = Math.PI / 180;
 
 
@@ -221,7 +221,6 @@ export default function Home({ seedlings }) {
   }
 
   const getAllFlowers = () => {
-    console.log('here')
     getFlowers()
       .then(data => {
         const cleanedFlowers = cleanFlowers(data.data)
@@ -230,7 +229,7 @@ export default function Home({ seedlings }) {
       })
   }
 
-// eslint-disable-next-line
+  // eslint-disable-next-line
   useEffect(() => {
     getAllSeedlings()
     getAllFlowers()
@@ -282,41 +281,36 @@ export default function Home({ seedlings }) {
 
   const renderFlowers = () => {
     const chooseFlower = (flower) => {
-      
-      switch(flower.plant_type) {
+
+      switch (flower.plant_type) {
         case 'flower1': {
-          console.log('in flower1 call')
           return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
         }
         case 'flower2': {
-          console.log('in flower2 call')
-          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed}/>
-        } 
+          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        }
         default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
       }
     }
 
-      const flowerArray = []
-        myFlowers.forEach((flower) => {
-            flowerArray.push(chooseFlower(flower)) 
-        })
+    const flowerArray = []
+    myFlowers.forEach((flower) => {
+      flowerArray.push(chooseFlower(flower))
+    })
 
-        console.log('myFlowers', myFlowers)
-  
-      setRenderedFlowers(flowerArray)
+    setRenderedFlowers(flowerArray)
   }
 
   useEffect(() => {
-    console.log('in useEffect')
     renderFlowers()
   }, [myFlowers])
-  
-  if(startNode.current){
-    setStartPosition(startNode.current.position) 
+
+  if (startNode.current) {
+    setStartPosition(startNode.current.position)
   }
 
   useEffect(() => {
-    if(!myFlowers.length){
+    if (!myFlowers.length) {
       setShowSelector(true)
     } else {
       setShowSelector(false)
@@ -337,7 +331,7 @@ export default function Home({ seedlings }) {
   }
 
   function selectFlowerToBreed(id, toBreed) {
-    if(toBreed) {
+    if (toBreed) {
       const foundFlower = myFlowers.find(flower => flower.id === id)
       setFlowersToBreed((prev) => [...prev, foundFlower])
     } else {
@@ -346,18 +340,17 @@ export default function Home({ seedlings }) {
   }
 
   useEffect(() => {
-    console.log(flowersToBreed)
-    if(flowersToBreed.length === 2) {
+
+    if (flowersToBreed.length === 2) {
       console.log('up in here')
       setReadyToBreed(true)
     }
   }, [flowersToBreed])
 
-  console.log('renderedFlowers', renderedFlowers)
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
-      <SceneTraversal />
+        <SceneTraversal />
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
           <ambientLight intensity={.8} position={[0, 2, 0]} />
@@ -377,22 +370,18 @@ export default function Home({ seedlings }) {
                 showSelector ?
                   <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
                   :
-                  <>
-                  <Float
-                    speed={10}
-                    rotationIntensity={.04}
-                    floatIntensity={.06} 
+                  <group>
+                    <Float
+                      speed={10}
+                      rotationIntensity={.04}
+                      floatIntensity={.06}
                     >
-                    <AnimatedGroup goToSeedSelector={goToSeedSelector} toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers} />
-                  </Float>
+                      <AnimatedGroup goToSeedSelector={goToSeedSelector} toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers} />
+                    </Float>
                     {plantNodes}
                     {renderedFlowers}
-                    {newSeedType &&
-                      <>
-                        <DraggableObject plantSeed={plantSeed} pos={[-10,0,-5]} seedType={newSeedType} plantNodes={plantNodes}/>
-                      </>
-                    }
-                  </>
+                    {newSeedType && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} seedType={newSeedType} plantNodes={plantNodes} />}
+                  </group>
               }
               <Debug>
               </Debug>

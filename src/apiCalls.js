@@ -28,7 +28,7 @@ const postFlower = (newFlower) => {
 
 const deleteFlower = (id) => {
   console.log(id)
-  return fetch(`https://bloom-brothers-be-c1f874334094.herokuapp.com/api/v0/plants/${id}`, {
+  return fetch(`http://127.0.0.1:5000/api/v0/plants/${id}`, {
     method: 'DELETE'
   })
     .then(response => response.json())

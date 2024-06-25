@@ -39,7 +39,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [canBeDeleted, setCanBeDeleted] = useState(false)
   const [ selectedToBreed, setSelectedToBreed ] = useState(false)
   const [flowerPhases, setFlowerPhases] = useState(['seedling', 'blooming', 'thriving', 'wilting', 'dead'])
-  const [targetDuration, setTargetDuration] = useState(flower.lifespan / 100000)
+  const [targetDuration, setTargetDuration] = useState(flower.lifespan / 1000)
 
   useEffect(() => {
     
@@ -144,7 +144,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   useEffect(() => {
     if (pos && currentStageData) {
       // setFlowerPosition([pos[0], pos[1], pos[2]]);
-      console.log('pos', pos)
       flowerObjApi.position.set(pos[0], pos[1], pos[2])
       flowerObj.current.positon = [pos[0], pos[1], pos[2]]
     }
@@ -156,7 +155,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   useEffect(() =>{
     if(bloomColor){
       let r,g,b
-      console.log(bloomColor)
       const getRandomColor = () => {
         let min = 0
         let max = 1
