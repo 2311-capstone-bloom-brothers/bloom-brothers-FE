@@ -169,7 +169,7 @@ export default function Home({ seedlings }) {
   const lightRef = useRef()
   const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
-  const [onLanding, setOnLanding] = useState(true)
+  const [onLanding, setOnLanding] = useState(false)
   const [flowersToBreed, setFlowersToBreed] = useState([])
   const [breedMode, setBreedMode] = useState(false)
   const [readyToBreed, setReadyToBreed] = useState(false)

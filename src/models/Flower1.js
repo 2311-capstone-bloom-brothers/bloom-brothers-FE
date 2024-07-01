@@ -9,6 +9,7 @@ import { Html } from '@react-three/drei';
 import {deleteFlower} from '../apiCalls'
 import './Flower.css'
 import { SquigglyWiggly } from '../functions/SquigglyWiggly';
+import FlowerMenu from '../components/FlowerMenu';
 
 
 const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode }) => {
@@ -40,6 +41,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [ selectedToBreed, setSelectedToBreed ] = useState(false)
   const [flowerPhases, setFlowerPhases] = useState(['seedling', 'blooming', 'thriving', 'wilting', 'dead'])
   const [targetDuration, setTargetDuration] = useState(flower.lifespan / 1000)
+  const [displayMenu, setDisplayMenu] = useState(false)
 
   useEffect(() => {
     
@@ -171,30 +173,14 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   }, [bloomColor])
   
 
-  function handleClick() {
-    if(breedMode) {
-      if(!selectedToBreed){
-        console.log('in here')
-        selectFlowerToBreed(flowerId, true)
-        setSelectedToBreed(true)
-      } else {
-        selectFlowerToBreed(flowerId, false)
-        setSelectedToBreed(false)
-      }
-    } else {
-      canBeDeleted ? setCanBeDeleted(false) : setCanBeDeleted(true)
-    }
-  }
-
+const handleClick = () =>{
+  displayMenu ? setDisplayMenu(false) : setDisplayMenu(true)
+}
 
   return (
     <group position={pos} onPointerDown={(e) => handleClick()}>
-
-     {usePhysics &&
-        <Html>
-          {selectedToBreed && <p>selectedToBreed</p>}
-          {canBeDeleted && <button className='delete-plant-button' onClick={(e) => deleteThisFlower(flowerId)}>Delete</button>}
-        </Html>
+     {displayMenu &&
+      <FlowerMenu flower={flower} currentStage={currentStage}/>
      }
       <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
         <sphereGeometry args={[
