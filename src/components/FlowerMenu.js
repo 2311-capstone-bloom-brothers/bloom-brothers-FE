@@ -5,7 +5,7 @@ import './FlowerMenu.css'
 import { useState, useEffect } from 'react';
 import { deleteFlower } from '../apiCalls';
 
-const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowersToBreed, setSpotlightPos}) => {
+const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breedMode, breed}) => {
     const [infoDisplay, setInfoDisplay] = useState(true)
     const [compostDisplay, setCompostDisplay] = useState(false)
     const [breedDisplay, setBreedDisplay] = useState(false)
@@ -40,19 +40,24 @@ const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowersToBreed,
 
   return (
     <group position={[-1.7,5,0]}>
-        <Html >
-            <span className='button-form'>
-                <img className={activeButton === 'compostButton' ? 'menu-buttons, active': 'menu-buttons'} id='compostButton' src={'/assets/compostButton.svg'} onClick={(e) => handleDisplay(e)}></img>
-                <img className={activeButton === 'infoButton' ? 'menu-buttons, active': 'menu-buttons'} id='infoButton' src={'/assets/infoButton.svg'} onClick={(e) => handleDisplay(e)}></img>
-                <img className={activeButton === 'breedButton' ? 'menu-buttons, active': 'menu-buttons'} id='breedButton' src={'/assets/breedButton.svg'} onClick={(e) => handleDisplay(e)}></img>
-            </span>
-        <group >
-        {infoDisplay && <PlantInfo className='display-group' flower={thisFlower} currentStage={flowerStage} />}
-        {compostDisplay && <CompostPlant flower={thisFlower}/>}
-        {breedDisplay && <BreedPlant flower={thisFlower} setBreedMode={setBreedMode} pos={pos} setFlowersToBreed={setFlowersToBreed} setSpotlightPos={setSpotlightPos}/>}
-        </group>
-        </Html>
-
+        {!breedMode ? 
+            <Html >
+                <span className='button-form'>
+                    <img className={activeButton === 'compostButton' ? 'menu-buttons, active': 'menu-buttons'} id='compostButton' src={'/assets/compostButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                    <img className={activeButton === 'infoButton' ? 'menu-buttons, active': 'menu-buttons'} id='infoButton' src={'/assets/infoButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                    <img className={activeButton === 'breedButton' ? 'menu-buttons, active': 'menu-buttons'} id='breedButton' src={'/assets/breedButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                </span>
+            <group >
+                {infoDisplay && <PlantInfo className='display-group' flower={thisFlower} currentStage={flowerStage} />}
+                {compostDisplay && <CompostPlant flower={thisFlower}/>}
+                {breedDisplay && <BreedPlant flower={thisFlower} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos}/>}
+            </group>
+            </Html>
+            :
+            <Html>
+                <BreedSelect flower={flower} breed={breed}/>
+            </Html>
+        }
     </group>
   )
 }
@@ -92,22 +97,35 @@ const CompostPlant = ({flower}) => {
     )
 }
 
-const BreedPlant = ({flower, setBreedMode, pos, setFlowersToBreed, setSpotlightPos}) => {
+const BreedPlant = ({flower, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breed}) => {
 
     const handleClick = () => {
         setBreedMode(true)
-        setFlowersToBreed([flower])
+        setFlowerToBreed(flower)
         setSpotlightPos(pos)
     }
 
     return(
         <>
             <div className='menu-text-container'>
-                    <h3 className='menu-h3'>Would you like to breed {flower.name}?</h3>
+                <h3 className='menu-h3'>Would you like to breed {flower.name}?</h3>
             </div>
             <button className='breed-button' onClick={(e) => handleClick()}>sELECT pARTNER</button>
         </>
         
         )
+}
+
+const BreedSelect = ({flower, breed}) => {
+
+    return(
+        <>
+            <div className='menu-text-container'>
+                <h3 className='breed-menu'>Breed with {flower.name}?</h3>
+            </div>
+            <button className='breed-button' onClick={() => breed(flower)}>bREED!</button>
+        </>
+    )
+
 }
 

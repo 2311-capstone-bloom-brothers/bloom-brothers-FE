@@ -17,6 +17,7 @@ import { OrbitControls, MeshWobbleMaterial } from "@react-three/drei";
 import getRandomNameCombo from "../../functions/getRandomNameCombo";
 import getRandomDescription from "../../functions/getRandomDescription";
 import breedFlowers from "../../functions/breedFlowers";
+import reverseConvertPlantObj from "../../functions/reverseConvertPlantObj";
 import Flower1 from "../../models/Flower1";
 import AnimatedGroup from "../AnimatedGroup";
 import Landing from '../Landing';
@@ -173,7 +174,7 @@ export default function Home({ seedlings }) {
   const [showSelector, setShowSelector] = useState(false)
   const [startPosition, setStartPosition] = useState()
   const [onLanding, setOnLanding] = useState(false)
-  const [flowersToBreed, setFlowersToBreed] = useState([])
+  const [flowerToBreed, setFlowerToBreed] = useState({})
   const [breedMode, setBreedMode] = useState(false)
   const [readyToBreed, setReadyToBreed] = useState(false)
   const [renderedFlowers, setRenderedFlowers] = useState([])
@@ -289,12 +290,12 @@ export default function Home({ seedlings }) {
 
       switch (flower.plant_type) {
         case 'flower1': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
         }
         case 'flower2': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
         }
-        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
+        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
       }
     }
 
@@ -338,23 +339,28 @@ export default function Home({ seedlings }) {
 
   function selectFlowerToBreed(id) {
       const foundFlower = myFlowers.find(flower => flower.id === id)
-      setFlowersToBreed((prev) => {
+      setFlowerToBreed((prev) => {
         console.log('prev', prev)
         return [...prev, foundFlower]
       })
   }
   
 
-  // useEffect(() => {
-  //   console.log(flowersToBreed.length)
-  //   if (flowersToBreed.length === 2) {
-  //     console.log('up in here')
-  //     setReadyToBreed(true)
-  //   }
-  // }, [flowersToBreed])
+  useEffect(() => {
+    if (flowerToBreed.length === 2) {
+      console.log('up in here')
+      setReadyToBreed(true)
+    }
+  }, [flowerToBreed])
 
+  function breed(flower) {
+    console.log("flower", reverseConvertPlantObj(flower))
+    console.log("flowerToBreed", reverseConvertPlantObj(flowerToBreed))
+    const babyFlower = breedFlowers(reverseConvertPlantObj(flower), reverseConvertPlantObj(flowerToBreed))
+    console.log("babyFlower", babyFlower)
+  }
   
-  console.log("flowersToBreed", flowersToBreed)
+  console.log("flowerToBreed", flowerToBreed)
 
   return (
     <StyledHome className={`home ${background}`}>

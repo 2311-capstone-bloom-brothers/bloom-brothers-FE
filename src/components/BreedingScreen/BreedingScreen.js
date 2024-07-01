@@ -1,7 +1,8 @@
 import React from 'react'
 import { usePlane } from '@react-three/cannon'
-import { SpotLight, Stars } from '@react-three/drei'
+import { OrbitControls, SpotLight, Stars } from '@react-three/drei'
 
+const r = Math.PI / 180
 
 const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos}) => {
     
@@ -9,16 +10,27 @@ const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos}) => {
 
   return (
     <>
-        <ambientLight intensity={.8} position={[0, 0, 0]} />
+        <ambientLight intensity={.3} position={[0, 0, 0]} />
         <SpotLight
-            position={[p[0], 2, p[2]]} 
-            rotation={[0,0,0]}
-            distance={10}
-            angle={1}
-            attenuation={1}
-            anglePower={1}
+            position={[p[0]-1, 4, p[2]]} 
+            distance={5}
+            angle={1.5}
+            attenuation={2}
+            anglePower={3}
+            intensity={15}
+            color='orange'
+        />
+        <SpotLight
+            position={[p[0]-4, 4, p[2]]} 
+            distance={5}
+            angle={1.5}
+            attenuation={2}
+            anglePower={3}
+            intensity={10}
+            color='hotpink'
         />
         <Ground />
+        {/* <OrbitControls /> */}
     </>
   )
 }
