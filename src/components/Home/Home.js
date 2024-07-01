@@ -21,6 +21,9 @@ import Flower1 from "../../models/Flower1";
 import AnimatedGroup from "../AnimatedGroup";
 import Landing from '../Landing';
 import { deleteFlower } from "../../apiCalls";
+import BreedingScreen from "../BreedingScreen/BreedingScreen";
+import RenderedFlowers from "../RenderedFlowers"
+import { Stars } from "@react-three/drei";
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -174,6 +177,7 @@ export default function Home({ seedlings }) {
   const [breedMode, setBreedMode] = useState(false)
   const [readyToBreed, setReadyToBreed] = useState(false)
   const [renderedFlowers, setRenderedFlowers] = useState([])
+  const [spotlightPos, setSpotlightPos] = useState()
 
 
   const startNode = useRef()
@@ -280,16 +284,17 @@ export default function Home({ seedlings }) {
   }
 
   const renderFlowers = () => {
+    console.log("inside rendered flowers")
     const chooseFlower = (flower) => {
 
       switch (flower.plant_type) {
         case 'flower1': {
-          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
         }
         case 'flower2': {
-          return <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
         }
-        default: <Flower1 key={Date.now()} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} />
+        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowersToBreed={setFlowersToBreed} />
       }
     }
 
@@ -298,12 +303,13 @@ export default function Home({ seedlings }) {
       flowerArray.push(chooseFlower(flower))
     })
 
+    console.log('flowerArray', flowerArray)
     setRenderedFlowers(flowerArray)
   }
 
   useEffect(() => {
     renderFlowers()
-  }, [myFlowers])
+  }, [myFlowers, breedMode])
 
   if (startNode.current) {
     setStartPosition(startNode.current.position)
@@ -330,36 +336,40 @@ export default function Home({ seedlings }) {
     setBreedMode(prev => !prev)
   }
 
-  function selectFlowerToBreed(id, toBreed) {
-    if (toBreed) {
+  function selectFlowerToBreed(id) {
       const foundFlower = myFlowers.find(flower => flower.id === id)
-      setFlowersToBreed((prev) => [...prev, foundFlower])
-    } else {
-
-    }
+      setFlowersToBreed((prev) => {
+        console.log('prev', prev)
+        return [...prev, foundFlower]
+      })
   }
+  
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   console.log(flowersToBreed.length)
+  //   if (flowersToBreed.length === 2) {
+  //     console.log('up in here')
+  //     setReadyToBreed(true)
+  //   }
+  // }, [flowersToBreed])
 
-    if (flowersToBreed.length === 2) {
-      console.log('up in here')
-      setReadyToBreed(true)
-    }
-  }, [flowersToBreed])
+  
+  console.log("flowersToBreed", flowersToBreed)
 
   return (
     <StyledHome className={`home ${background}`}>
-      <Canvas id="canvas" style={{ background: 'skyblue' }} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
+      <Canvas id="canvas" style={{background: 'black'}} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
         <SceneTraversal />
         {/* {/* <Stats showPanel={0} className="stats" /> */}
+        {!breedMode && 
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
           <ambientLight intensity={.8} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 3, 10]} intensity={1} />
           {onLanding ?
             <>
-              <Skybox />
-              <Landing startGame={startGame} />
+            <Skybox />
+            <Landing startGame={startGame} />
             </>
             :
             <>
@@ -368,27 +378,37 @@ export default function Home({ seedlings }) {
               {animate ? <CameraAnimation /> : <ReverseAnimation />}
               {
                 showSelector ?
-                  <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
-                  :
+                <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
+                :
                   <group>
                     <Float
                       speed={10}
                       rotationIntensity={.04}
                       floatIntensity={.06}
-                    >
+                      >
                       <AnimatedGroup goToSeedSelector={goToSeedSelector} toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers} />
                     </Float>
                     {plantNodes}
-                    {renderedFlowers}
+                    <RenderedFlowers renderedFlowers={renderedFlowers} />
                     {newSeedType && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} seedType={newSeedType} plantNodes={plantNodes} />}
                   </group>
               }
-              <Debug>
-              </Debug>
               {/* <OrbitControls /> */}
             </>
           }
         </Physics>
+        }
+
+        {breedMode && 
+          <>
+            <Stars radius={20} depth={10} count={10000} factor={2} saturation={0} fade speed={1.5} />
+            <Physics>
+              <BreedingScreen breedMode={breedMode} renderedFlowers={renderedFlowers} spotlightPos={spotlightPos}/>
+              <RenderedFlowers renderedFlowers={renderedFlowers} />
+            </Physics>
+          </>
+        }
+
       </Canvas>
     </StyledHome>
   );

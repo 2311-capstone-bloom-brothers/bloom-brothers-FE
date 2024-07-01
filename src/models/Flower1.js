@@ -12,7 +12,7 @@ import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 import FlowerMenu from '../components/FlowerMenu';
 
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging }) => {
+const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging, setBreedMode, setFlowersToBreed, setSpotlightPos }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const springRestLength = 1;
   const springStiffness = 100;
@@ -43,6 +43,8 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [targetDuration, setTargetDuration] = useState(flower.lifespan / 1000)
   const [displayMenu, setDisplayMenu] = useState(false)
   const [allowMenu, setAllowMenu] = useState(false)
+
+  console.log("breedMode in flower 1", breedMode)
 
   useEffect(() => {
     
@@ -175,15 +177,25 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   
 
 const handleClick = () =>{
-  displayMenu ? setDisplayMenu(false) : setDisplayMenu(true)
+  if(breedMode) {
+    console.log('in handleClick')
+    selectFlowerToBreed(flower.id)
+  } else {
+    displayMenu ? setDisplayMenu(false) : setDisplayMenu(true)
+  }
 }
 
   return (
-    <group position={pos} onPointerDown={(e) => handleClick()}>
-     {displayMenu && !isDragging &&
-      <FlowerMenu flower={flower} currentStage={currentStage}/>
+    <group position={pos}>
+     {displayMenu && flower.name &&
+      <FlowerMenu flower={flower} currentStage={currentStage} setBreedMode={setBreedMode} pos={pos} setFlowersToBreed={setFlowersToBreed} setSpotlightPos={setSpotlightPos}/>
      }
-      <mesh castShadow position={[0,stemHeight,0]} receiveShadow >
+      <mesh onClick={(e) => {
+            handleClick()
+          }}
+          castShadow
+          position={[0,stemHeight,0]}
+          receiveShadow >
         <sphereGeometry args={[
           receptacleRadius,
           32,
@@ -191,7 +203,13 @@ const handleClick = () =>{
         ]} />    
         <meshStandardMaterial color="yellow" />
       </mesh>
-      <mesh ref={bloomRef} castShadow position={[0,stemHeight,0]} receiveShadow >
+      <mesh onClick={(e) => {
+              handleClick()
+            }}
+            ref={bloomRef}
+            castShadow
+            position={[0,stemHeight,0]}
+            receiveShadow >
         <cylinderGeometry args={[
           currentStageData ? currentStageData.radiusTop : 0.2,
           currentStageData ? currentStageData.radiusTop : 0.2,
@@ -208,7 +226,12 @@ const handleClick = () =>{
         wireframe={false}
         />
       </mesh>
-      <mesh castShadow position={[0,stemHeight / 2,0]} receiveShadow>
+      <mesh onClick={(e) => {
+            handleClick()
+            }}
+            castShadow
+            position={[0,stemHeight / 2,0]}
+            receiveShadow>
         <cylinderGeometry args={[
           currentStageData ? currentStageData.stemWidth * 0.1 : 0.01,
           currentStageData ? currentStageData.stemWidth * 0.1 : 0.01,

@@ -5,7 +5,7 @@ import './FlowerMenu.css'
 import { useState, useEffect } from 'react';
 import { deleteFlower } from '../apiCalls';
 
-const FlowerMenu = ({flower, currentStage}) => {
+const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowersToBreed, setSpotlightPos}) => {
     const [infoDisplay, setInfoDisplay] = useState(true)
     const [compostDisplay, setCompostDisplay] = useState(false)
     const [breedDisplay, setBreedDisplay] = useState(false)
@@ -49,7 +49,7 @@ const FlowerMenu = ({flower, currentStage}) => {
         <group >
         {infoDisplay && <PlantInfo className='display-group' flower={thisFlower} currentStage={flowerStage} />}
         {compostDisplay && <CompostPlant flower={thisFlower}/>}
-        {breedDisplay && <BreedPlant flower={thisFlower}/>}
+        {breedDisplay && <BreedPlant flower={thisFlower} setBreedMode={setBreedMode} pos={pos} setFlowersToBreed={setFlowersToBreed} setSpotlightPos={setSpotlightPos}/>}
         </group>
         </Html>
 
@@ -61,18 +61,15 @@ export default FlowerMenu
 
 
 const PlantInfo = ({flower, currentStage}) => {
-    const timeStamp = new Date(flower.planted)
+    const timeStamp = new Date(flower.planted * 1000)
     const plantedDate = timeStamp.toLocaleDateString()
+
     return(
     <>
         <div className='menu-text-container'>
-                {/* <label className='menu-label'>nAME:</label> */}
                 <h3 className='menu-h3'>{flower.name}</h3>
-                {/* <label className='menu-label'>dESCRIPTION:</label> */}
                 <p className='menu-p'>{flower.description}</p>
-                {/* <label className='menu-label'>pLANTED:</label> */}
                 <p className='menu-p'>{plantedDate}</p>
-                {/* <label className='menu-label'>sTAGE:</label> */}
                 <p className='menu-p'>{currentStage}</p>
         </div>
     </>
@@ -95,14 +92,20 @@ const CompostPlant = ({flower}) => {
     )
 }
 
-const BreedPlant = ({flower}) => {
+const BreedPlant = ({flower, setBreedMode, pos, setFlowersToBreed, setSpotlightPos}) => {
+
+    const handleClick = () => {
+        setBreedMode(true)
+        setFlowersToBreed([flower])
+        setSpotlightPos(pos)
+    }
 
     return(
         <>
             <div className='menu-text-container'>
                     <h3 className='menu-h3'>Would you like to breed {flower.name}?</h3>
             </div>
-            <button className='breed-button'>sELECT pARTNER</button>
+            <button className='breed-button' onClick={(e) => handleClick()}>sELECT pARTNER</button>
         </>
         
         )
