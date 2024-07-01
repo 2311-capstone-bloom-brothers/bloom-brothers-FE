@@ -12,7 +12,7 @@ import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 import FlowerMenu from '../components/FlowerMenu';
 
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode }) => {
+const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const springRestLength = 1;
   const springStiffness = 100;
@@ -42,6 +42,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [flowerPhases, setFlowerPhases] = useState(['seedling', 'blooming', 'thriving', 'wilting', 'dead'])
   const [targetDuration, setTargetDuration] = useState(flower.lifespan / 1000)
   const [displayMenu, setDisplayMenu] = useState(false)
+  const [allowMenu, setAllowMenu] = useState(false)
 
   useEffect(() => {
     
@@ -179,7 +180,7 @@ const handleClick = () =>{
 
   return (
     <group position={pos} onPointerDown={(e) => handleClick()}>
-     {displayMenu &&
+     {displayMenu && !isDragging &&
       <FlowerMenu flower={flower} currentStage={currentStage}/>
      }
       <mesh castShadow position={[0,stemHeight,0]} receiveShadow >

@@ -37,6 +37,16 @@
 
 .menu-buttons{
     width: 55px;
+    filter: grayscale(1);
+    &:hover{
+        filter: grayscale(0);
+        cursor: pointer
+    }
+}
+
+.active{
+    width: 55px;
+    filter: grayscale(0);
 }
 
 .menu-p{
@@ -63,9 +73,9 @@
 }
 
 .compost-button{
-    background: green;
+    background: #2C7911;
     border-radius: 14px;
-    border: 1px solid black;
+    border: 1px solid #ffffff;
     color: white;
     font-family: 'InterFont', sans-serif;
     padding: 5px;
@@ -73,6 +83,25 @@
     position: relative;
     top: -100px;
     left: 25px;
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.breed-button{
+    background: #C30C85;
+    border-radius: 14px;
+    border: 1px solid #ffffff;
+    color: white;
+    font-family: 'InterFont', sans-serif;
+    padding: 5px;
+    width: 150px;
+    position: relative;
+    top: -100px;
+    left: 25px;
+    &:hover{
+        cursor: pointer;
+    }
 }
 
 .menu-label{

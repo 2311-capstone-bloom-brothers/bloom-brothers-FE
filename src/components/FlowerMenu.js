@@ -3,6 +3,7 @@ import { Root, Container } from "@react-three/uikit";
 import { Html, Billboard } from '@react-three/drei';
 import './FlowerMenu.css'
 import { useState, useEffect } from 'react';
+import { deleteFlower } from '../apiCalls';
 
 const FlowerMenu = ({flower, currentStage}) => {
     const [infoDisplay, setInfoDisplay] = useState(true)
@@ -10,7 +11,7 @@ const FlowerMenu = ({flower, currentStage}) => {
     const [breedDisplay, setBreedDisplay] = useState(false)
     const [thisFlower, setThisFlower] = useState(flower)
     const [flowerStage, setFlowerStage] = useState(currentStage)
-
+    const [activeButton, setActiveButton] = useState('infoButton')
 
     const handleDisplay = (e) => {
         switch(e.target.id){
@@ -33,15 +34,17 @@ const FlowerMenu = ({flower, currentStage}) => {
                 }
             break;
         }
+
+        setActiveButton(e.target.id)
     }
 
   return (
     <group position={[-1.7,5,0]}>
         <Html >
             <span className='button-form'>
-                <img className='menu-buttons' id='compostButton' src={'/assets/compostButton.svg'} onClick={(e) => handleDisplay(e)}></img>
-                <img className='menu-buttons' id='infoButton' src={'/assets/infoButton.svg'} onClick={(e) => handleDisplay(e)}></img>
-                <img className='menu-buttons' id='breedButton' src={'/assets/breedButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                <img className={activeButton === 'compostButton' ? 'menu-buttons, active': 'menu-buttons'} id='compostButton' src={'/assets/compostButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                <img className={activeButton === 'infoButton' ? 'menu-buttons, active': 'menu-buttons'} id='infoButton' src={'/assets/infoButton.svg'} onClick={(e) => handleDisplay(e)}></img>
+                <img className={activeButton === 'breedButton' ? 'menu-buttons, active': 'menu-buttons'} id='breedButton' src={'/assets/breedButton.svg'} onClick={(e) => handleDisplay(e)}></img>
             </span>
         <group >
         {infoDisplay && <PlantInfo className='display-group' flower={thisFlower} currentStage={flowerStage} />}
@@ -78,7 +81,7 @@ const PlantInfo = ({flower, currentStage}) => {
 }
 
 const CompostPlant = ({flower}) => {
-    console.log('display compost')
+    
     return(
     <>
         <div className='menu-text-container'>
@@ -86,19 +89,20 @@ const CompostPlant = ({flower}) => {
                 <p className='menu-p'>This will permanently remove 
                 this plant from your garden.</p>
         </div>
-        <button className='compost-button'>cOMPOST</button>
+        <button className='compost-button' onClick={() => deleteFlower(flower.id)} >cOMPOST</button>
     </>
     
     )
 }
 
 const BreedPlant = ({flower}) => {
+
     return(
         <>
             <div className='menu-text-container'>
                     <h3 className='menu-h3'>Would you like to breed {flower.name}?</h3>
             </div>
-            <button className='compost-button'>sELECT pARTNER</button>
+            <button className='breed-button'>sELECT pARTNER</button>
         </>
         
         )
