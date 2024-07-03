@@ -1,6 +1,7 @@
 const liveURL = 'http://127.0.0.1:5000/api/v0/plants'
 const testURL = 'http://localhost:3001/api/v1/'
 const herokuURL = 'https://bloom-brothers-be-c1f874334094.herokuapp.com/api/v0/plants'
+const babyURL = 'http://127.0.0.1:5000/api/v0/breeding'
 
 function getFlowers() {
   return fetch(liveURL)
@@ -13,9 +14,11 @@ function getFlowers() {
     })
 }
 
-const postFlower = (newFlower) => {
+const postFlower = (newFlower, type) => {
   console.log('made it here and new flower is ', newFlower)
-  return fetch(liveURL, {
+  const url = type === "new" ? liveURL : babyURL
+
+  return fetch(url, {
     method: 'POST',
     body: JSON.stringify(newFlower),
     headers: {

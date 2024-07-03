@@ -6,7 +6,7 @@ const r = Math.PI / 180
 
 const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos}) => {
     
-    const p = [...spotlightPos]
+  const p = [...spotlightPos]
 
   return (
     <>

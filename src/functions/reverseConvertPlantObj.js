@@ -53,6 +53,7 @@ export default function reverseConvertPlantObj(plant) {
       phases: newPhases,
       lifespan: plant.lifespan,
       planted: plant.planted,
-      position: plant.position
+      position: plant.position,
+      plant_type: plant.plant_type
     };
   }

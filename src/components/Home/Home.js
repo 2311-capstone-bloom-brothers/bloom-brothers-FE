@@ -179,6 +179,7 @@ export default function Home({ seedlings }) {
   const [readyToBreed, setReadyToBreed] = useState(false)
   const [renderedFlowers, setRenderedFlowers] = useState([])
   const [spotlightPos, setSpotlightPos] = useState()
+  const [fullSeed, setFullSeed] = useState(null)
 
 
   const startNode = useRef()
@@ -193,26 +194,33 @@ export default function Home({ seedlings }) {
     }
   }, [myFlowers])
 
-  function plantSeed(seedType, position) {
+  function plantSeed(seedData, position, dataType) {
     setAnimate(true)
     const plantName = getRandomNameCombo()
     const plantDescription = getRandomDescription()
-    const newFlower = {
-      "name": plantName,
-      "description": `${plantDescription}`,
-      "position": position.join(),
-      "type": seedType,
-    };
+    const newFlower = 
+      dataType === "new" ?
+      {
+        "name": plantName,
+        "description": `${plantDescription}`,
+        "position": position.join(),
+        "type": seedData,
+        }
+      :
+      seedData
 
-    postFlower(newFlower)
+    postFlower(newFlower, dataType)
       .then(data => {
         const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
-
+        console.log("cleanedNewFlower", cleanedNewFlower)
         setMyFlowers(prev => [...prev, cleanedNewFlower])
         setNewSeedType(null)
+        // setFullSeed(null)
         // setShowSelector(false)
       })
   }
+
+  console.log('myFlowers', myFlowers)
 
   function cleanFlowers(flowers) {
     return flowers.map((flower) => {
@@ -358,6 +366,8 @@ export default function Home({ seedlings }) {
     console.log("flowerToBreed", reverseConvertPlantObj(flowerToBreed))
     const babyFlower = breedFlowers(reverseConvertPlantObj(flower), reverseConvertPlantObj(flowerToBreed))
     console.log("babyFlower", babyFlower)
+    setBreedMode(false)
+    setFullSeed(babyFlower)
   }
   
   console.log("flowerToBreed", flowerToBreed)
@@ -397,6 +407,7 @@ export default function Home({ seedlings }) {
                     {plantNodes}
                     <RenderedFlowers renderedFlowers={renderedFlowers} />
                     {newSeedType && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} seedType={newSeedType} plantNodes={plantNodes} />}
+                    {fullSeed && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} plantNodes={plantNodes} fullSeed={fullSeed} />}
                   </group>
               }
               {/* <OrbitControls /> */}
