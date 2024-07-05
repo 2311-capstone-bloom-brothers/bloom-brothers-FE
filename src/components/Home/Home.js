@@ -211,6 +211,7 @@ export default function Home({ seedlings }) {
 
     postFlower(newFlower, dataType)
       .then(data => {
+        console.log("data.data.attributes", data.data.attributes)
         const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
         console.log("cleanedNewFlower", cleanedNewFlower)
         setMyFlowers(prev => [...prev, cleanedNewFlower])

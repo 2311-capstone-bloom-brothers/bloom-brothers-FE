@@ -25,7 +25,10 @@ const postFlower = (newFlower, type) => {
       'Content-Type': 'application/json',
     }
   })
-    .then(response => response.json())
+    .then((response) => {
+      console.log(response.json())
+      return response.json()
+})
     .catch(err => console.log(err))
 }
 
@@ -35,7 +38,6 @@ const deleteFlower = (id) => {
   })
     .then(response => response.json())
     .catch(err => console.log(err))
-    
 }
 
 // deleteFlower(22)
