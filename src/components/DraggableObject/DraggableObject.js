@@ -10,7 +10,7 @@ import './DraggableObject.css';
 
 
 
-const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
+const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed, fullSeed }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [draggedPos, setDraggedPos] = useState([0, 5, 0]);
     const [attachNode, setAttachNode] = useState()
@@ -128,14 +128,23 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed }) => {
             ref={infoBoxRef}
           >
             <div style={{ position: 'absolute', top: 10, left: 10, padding: '5px', borderRadius: '3px' }}>
-              <button onClick={(e) => plantSeed(seedType, attachNode)} className='plant-here-button'>Plant Here?</button>
+              <button onClick={(e) => {
+                seedType && plantSeed(seedType, attachNode, "new")
+                fullSeed && plantSeed(fullSeed, attachNode, "bred")
+              }} className='plant-here-button'>Plant Here?</button>
             </div>
           </Html>
         )}
         {seedType === 'flower1' &&
                 <Flower1
-                usePhysics={false}
-                pos={[-10,0,-5]}
+                  isDragging={isDragging}
+                  stage={'seedling'}
+                  flower={convertFlowerObject(seedlingsData[0].attributes).phases.seedling}
+                />
+        }       
+        {fullSeed &&
+                <Flower1
+                  isDragging={isDragging}
                   stage={'seedling'}
                   flower={convertFlowerObject(seedlingsData[0].attributes).phases.seedling}
                 />
