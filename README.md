@@ -2,9 +2,8 @@
 **Overview:**
 **bLOOMbABY** leverages Three.js to create a dynamic app that procedurally generates and simulates the lifespans of plants within a virtual garden, offering nostalgic 3D visualization, efficient performance, and an engaging interactive experience. Three.js's capability to render complex plant geometries with advanced graphics effects allows for the generation of unique plants and their environments. This technology enhances user engagement through interactive manipulation and real-time growth simulations. Procedural generation ensures each plant is unique, providing scalability and flexibility to the simulation.
 
-[Check out the beta version here!](https://bloombabyfe-toms-projects-be041e30.vercel.app/)
-
 ###  Installation
+- follow instructions in [bloom-brothers-be](https://github.com/2311-capstone-bloom-brothers/bloom-brothers-be) and [bloom-brothers-be-generator](https://github.com/2311-capstone-bloom-brothers/bloom-brothers-be-generator) to run backend
 - `fork` this repo and clone it to your local machine
 - `cd` into the repo
 - `npm install` dependencies
