@@ -12,7 +12,7 @@ import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 import FlowerMenu from '../components/FlowerMenu';
 
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging, setBreedMode, setFlowerToBreed, setSpotlightPos, breed }) => {
+const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging, setBreedMode, setFlowerToBreed, setSpotlightPos, breed, menuVisibility, setMenuVisibility}) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const springRestLength = 1;
   const springStiffness = 100;
@@ -176,14 +176,16 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   }, [bloomColor])
   
 
-const handleClick = () =>{
-    displayMenu ? setDisplayMenu(false) : setDisplayMenu(true)
+  const handleClick = () =>{
+    setDisplayMenu(true)
   }
+
+  console.log('displayMenu', displayMenu)
 
   return (
     <group position={pos}>
      {displayMenu && flower.name &&
-      <FlowerMenu flower={flower} breedMode={breedMode} currentStage={currentStage} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos} breed={breed} />
+      <FlowerMenu flower={flower} breedMode={breedMode} currentStage={currentStage} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos} breed={breed} setDisplayMenu={setDisplayMenu}/>
      }
       <mesh onClick={(e) => {
             handleClick()

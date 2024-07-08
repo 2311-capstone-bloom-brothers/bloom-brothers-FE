@@ -5,7 +5,7 @@ import './FlowerMenu.css'
 import { useState, useEffect } from 'react';
 import { deleteFlower } from '../apiCalls';
 
-const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breedMode, breed}) => {
+const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breedMode, breed, setDisplayMenu}) => {
     const [infoDisplay, setInfoDisplay] = useState(true)
     const [compostDisplay, setCompostDisplay] = useState(false)
     const [breedDisplay, setBreedDisplay] = useState(false)
@@ -38,10 +38,15 @@ const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, 
         setActiveButton(e.target.id)
     }
 
+    const handleClick = () => {
+        setDisplayMenu(false)
+    }
+
   return (
     <group position={[-1.7,5,0]}>
         {!breedMode ? 
             <Html >
+                <div className='canvas-click' onClick={() => handleClick()}></div>
                 <span className='button-form'>
                     <img className={activeButton === 'compostButton' ? 'menu-buttons, active': 'menu-buttons'} id='compostButton' src={'/assets/compostButton.svg'} onClick={(e) => handleDisplay(e)}></img>
                     <img className={activeButton === 'infoButton' ? 'menu-buttons, active': 'menu-buttons'} id='infoButton' src={'/assets/infoButton.svg'} onClick={(e) => handleDisplay(e)}></img>

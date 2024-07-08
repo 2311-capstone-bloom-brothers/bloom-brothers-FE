@@ -1,10 +1,11 @@
 import React from 'react'
 import { usePlane } from '@react-three/cannon'
 import { OrbitControls, SpotLight, Stars } from '@react-three/drei'
+import TextButton from "../TextButton";
 
 const r = Math.PI / 180
 
-const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos}) => {
+const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos, goHome}) => {
     
   const p = [...spotlightPos]
 
@@ -30,6 +31,7 @@ const BreedingScreen = ({breedMode, renderedFlowers, spotlightPos}) => {
             color='hotpink'
         />
         <Ground />
+        <TextButton goHome={goHome} />
         {/* <OrbitControls /> */}
     </>
   )
