@@ -34,8 +34,11 @@ const Seedling = ({ seedlingIndex, numSeedlings, seedling, flower, pickSeed }) =
     position={!leafGlow ? [0, 0, 0] : [0, 0.5, 0]}
     >
         {leafGlow && 
-            <Html className='plant-menu' ref={hover} position={[0,1.5,0]}>
-                pLANT mE!
+            <Html className='seedling-html' ref={hover} position={[-2,2.2,0]}>
+                <div className='bubble-container'>
+                    <p className='bubble-text'>pLANT mE!</p>
+                    <img src='/assets/thoughtBubble.svg'/>
+                </div>
             </Html>
         }
                     <Flower1

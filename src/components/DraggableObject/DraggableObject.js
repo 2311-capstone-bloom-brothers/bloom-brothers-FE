@@ -117,6 +117,7 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed, fullSee
             position={[0,2.2,0]}  
             ref={infoBoxRef}     
           >
+            
             <div className="to-plant-menu">
               Find my<br></br>new home!
             </div>

@@ -25,6 +25,8 @@ import { deleteFlower } from "../../apiCalls";
 import BreedingScreen from "../BreedingScreen/BreedingScreen";
 import RenderedFlowers from "../RenderedFlowers"
 import { Stars } from "@react-three/drei";
+import { useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
 
 function CameraAnimation() {
   const { camera } = useThree();
@@ -89,6 +91,8 @@ const PlantNode = React.forwardRef(({ pos }, ref) => {
 
 const Ground = () => {
 
+  // const texture = useLoader(THREE.TextureLoader, '/assets/grass.jpg')
+
   let r = Math.PI / 180;
 
   const [ground] = usePlane(() => ({
@@ -134,12 +138,17 @@ const Ground = () => {
   }));
 
 
+  const texture = useLoader(TextureLoader, '/assets/grass2.jpg'); 
+
   return (
     <group position={[0, 0, 0]}>
       <mesh receiveShadow ref={ground}>
-        <planeGeometry args={[10, 10, 256, 256]} />
+        <planeGeometry args={[10, 10, 256, 256]}  />
         <meshLambertMaterial
-          color={'lightgreen'}
+        color='lightgreen'
+          // emissive={'yellow'}
+          // emissiveIntensity={0.15}
+          // map={texture}
         />
       </mesh>
     </group>
@@ -338,6 +347,10 @@ export default function Home({ seedlings }) {
     setShowSelector(true)
   }
 
+  function goHome() {
+    setBreedMode(false)
+  }
+
   function startGame() {
     setOnLanding(false)
   }
@@ -353,7 +366,6 @@ export default function Home({ seedlings }) {
         return [...prev, foundFlower]
       })
   }
-  
 
   useEffect(() => {
     if (flowerToBreed.length === 2) {
@@ -370,7 +382,8 @@ export default function Home({ seedlings }) {
     setBreedMode(false)
     setFullSeed(babyFlower)
   }
-  
+
+ 
   console.log("flowerToBreed", flowerToBreed)
 
   return (
@@ -380,7 +393,7 @@ export default function Home({ seedlings }) {
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         {!breedMode && 
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
-          <ambientLight intensity={.8} position={[0, 2, 0]} />
+          <ambientLight intensity={1} position={[0, 2, 0]} />
           <pointLight position={[-2, 20, 10]} intensity={30} />
           <directionalLight castShadow ref={lightRef} position={[-2, 3, 10]} intensity={1} />
           {onLanding ?
@@ -421,7 +434,7 @@ export default function Home({ seedlings }) {
           <>
             <Stars radius={20} depth={10} count={10000} factor={2} saturation={0} fade speed={1.5} />
             <Physics>
-              <BreedingScreen breedMode={breedMode} renderedFlowers={renderedFlowers} spotlightPos={spotlightPos}/>
+              <BreedingScreen breedMode={breedMode} renderedFlowers={renderedFlowers} spotlightPos={spotlightPos} goHome={goHome}/>
               <RenderedFlowers renderedFlowers={renderedFlowers} />
             </Physics>
           </>
