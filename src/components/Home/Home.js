@@ -180,7 +180,7 @@ export default function Home({ seedlings }) {
   const [renderedFlowers, setRenderedFlowers] = useState([])
   const [spotlightPos, setSpotlightPos] = useState()
   const [fullSeed, setFullSeed] = useState(null)
-
+  const [menuVisibility, setMenuVisibility] = useState(false)
 
   const startNode = useRef()
 
@@ -299,12 +299,12 @@ export default function Home({ seedlings }) {
 
       switch (flower.plant_type) {
         case 'flower1': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
         }
         case 'flower2': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
+          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
         }
-        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed}/>
+        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
       }
     }
 
@@ -375,7 +375,7 @@ export default function Home({ seedlings }) {
 
   return (
     <StyledHome className={`home ${background}`}>
-      <Canvas id="canvas" style={{background: 'black'}} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }}>
+      <Canvas id="canvas" style={{background: 'black'}} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }} >
         <SceneTraversal />
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         {!breedMode && 
