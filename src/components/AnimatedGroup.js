@@ -39,7 +39,7 @@ export default function AnimatedGroup({ goToSeedSelector, toggleBreedMode, ready
           <Text2 />
         </mesh>
         <TextButton goToSeedSelector={goToSeedSelector} />
-        <BreedButton toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers}/>
+        {/* <BreedButton toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers}/> */}
       </group>
     );
   };
