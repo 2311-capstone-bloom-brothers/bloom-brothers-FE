@@ -3,6 +3,7 @@ import FlowerAssembly from "../FlowerAssembly/FlowerAssembly"
 import Flower1 from '../../models/Flower1'
 import { useFrame } from "@react-three/fiber"
 import { Html, Text } from "@react-three/drei"
+import './Seedling.css'
 
 const Seedling = ({ seedlingIndex, numSeedlings, seedling, flower, pickSeed }) => {
     const [leafGlow, setLeafGlow] = useState(false)
@@ -33,8 +34,8 @@ const Seedling = ({ seedlingIndex, numSeedlings, seedling, flower, pickSeed }) =
     position={!leafGlow ? [0, 0, 0] : [0, 0.5, 0]}
     >
         {leafGlow && 
-            <Html ref={hover} position={[0,1.5,0]}>
-                PLANT ME!
+            <Html className='plant-menu' ref={hover} position={[0,1.5,0]}>
+                pLANT mE!
             </Html>
         }
                     <Flower1

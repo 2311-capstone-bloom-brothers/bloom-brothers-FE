@@ -16,8 +16,7 @@ export default function SeedSelector({ seedlings, pickSeed }) {
 
     return (
         <>
-            <Text3 onPointerDown={() => {console.log('I got clicked')}}/>
-            {/* {seedlingComponents} */}
+            <Text3 />
             <Seedling key={Date.now()} seedlingIndex={1} numSeedlings={1} seedling={seedlings[0]} flower={null} pickSeed={pickSeed} />
             {/* <NewPlantForm plantFlower={plantFlower} /> */}
         </>

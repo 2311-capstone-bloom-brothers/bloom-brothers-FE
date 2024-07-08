@@ -40,7 +40,7 @@
     filter: grayscale(1);
     &:hover{
         filter: grayscale(0);
-        cursor: pointer
+        cursor: pointer;
     }
 }
 
@@ -83,6 +83,7 @@
     padding: 5px 30px 5px 30px;
     border-radius: 10px;
 }
+
 
 .compost-button{
     background: #2C7911;
