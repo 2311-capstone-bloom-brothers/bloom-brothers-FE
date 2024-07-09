@@ -32,6 +32,7 @@ const postFlower = (newFlower, type) => {
 }
 
 const deleteFlower = (id) => {
+  console.log(id)
   return fetch(`http://127.0.0.1:5000/api/v0/plants/${id}`, {
     method: 'DELETE'
   })

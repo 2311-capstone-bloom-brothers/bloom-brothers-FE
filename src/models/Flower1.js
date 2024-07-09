@@ -12,7 +12,7 @@ import { SquigglyWiggly } from '../functions/SquigglyWiggly';
 import FlowerMenu from '../components/FlowerMenu';
 
 
-const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging, setBreedMode, setFlowerToBreed, setSpotlightPos, breed, menuVisibility, setMenuVisibility}) => {
+const Flower1 = ({ setRefreshFlowerArray, flower, stage, pos, deleteThisFlower, canDelete, usePhysics, selectFlowerToBreed, breedMode, isDragging, setBreedMode, setFlowerToBreed, setSpotlightPos, breed, menuVisibility, setMenuVisibility}) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const springRestLength = 1;
   const springStiffness = 100;
@@ -44,7 +44,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [displayMenu, setDisplayMenu] = useState(false)
   const [allowMenu, setAllowMenu] = useState(false)
 
-  console.log("breedMode in flower 1", breedMode)
 
   useEffect(() => {
     
@@ -69,7 +68,12 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
     
     if(flower.phases && currentStage){
       // const stageIndex = flowerPhases.indexOf(stage)
-      setBloomColor(...flower.phases[currentStage].color)
+      if(flower.phases[currentStage].bloomColor){
+        setBloomColor(...flower.phases[currentStage].bloomColor)
+      }
+      if(flower.phases[currentStage].color){
+        setBloomColor(...flower.phases[currentStage].color)
+      }
     }
 
     if(flower){
@@ -171,6 +175,7 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
       b = getRandomColor() 
       
       bloomRef.current.material.color.setRGB(r,g,b)
+      // bloomRef.current.material.color.setRGB(0,1,0)
     }    
     
   }, [bloomColor])
@@ -180,12 +185,12 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
     setDisplayMenu(true)
   }
 
-  console.log('displayMenu', displayMenu)
+  console.log('flower1', breedMode)
 
   return (
-    <group position={pos}>
+    <group name={`flower ${flower.name}`} position={pos}>
      {displayMenu && flower.name &&
-      <FlowerMenu flower={flower} breedMode={breedMode} currentStage={currentStage} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos} breed={breed} setDisplayMenu={setDisplayMenu}/>
+      <FlowerMenu flower={flower} setRefreshFlowerArray={setRefreshFlowerArray} breedMode={breedMode} currentStage={currentStage} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos} breed={breed} setDisplayMenu={setDisplayMenu}/>
      }
       <mesh onClick={(e) => {
             handleClick()

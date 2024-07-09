@@ -71,8 +71,6 @@ export default function OldHome() {
         getAllFlowers()
     }, [])
 
-    console.log('myFlowers', myFlowers)
-
     return (
         <main>
             <StyledHome>

@@ -25,7 +25,6 @@ export default function reverseConvertPlantObj(plant) {
   
     phases.forEach(phase => {
       const phaseData = plant.phases[phase];
-      console.log(phaseData)
   
       newPhases.stem.stemColor.push(phaseData.stemColor);
       newPhases.stem.stemWidth.push(phaseData.stemWidth);

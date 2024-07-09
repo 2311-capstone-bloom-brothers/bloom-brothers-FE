@@ -53,7 +53,7 @@ function ReverseAnimation() {
   const targetZoom = useRef(80);
   const progress = useRef(0);
 
-  useFrame(() => {
+  useFrame(() => { 
     if (progress.current < 1) {
       progress.current += 0.0005;
       camera.position.lerp({ x: targetPosition.current[0], y: targetPosition.current[1], z: targetPosition.current[2] }, progress.current);
@@ -157,14 +157,33 @@ const Ground = () => {
 
 const SceneTraversal = () => {
   const { scene } = useThree();
+  const sceneRef = useRef(scene);
+  const [sceneArray, setSceneArray] = useState([])
 
   useEffect(() => {
-    // scene.traverse((object) => {
-    //   console.log(object);
-    // });
-  }, [scene]);
+    if(sceneRef.current){
+      sceneRef.current.children.forEach((child) =>{
+        if(child.name === 'homepage scene'){
+          setSceneArray(child)
+        }
+      })
+    }
+  }, [])
 
-  return null;
+
+  useEffect(() =>{ 
+    const nameBuffer = []
+    if(sceneArray.children){ 
+      sceneArray.children.forEach((child) => {
+        if(child.name.includes('flower')){
+          nameBuffer.push(child.name) 
+        }
+      })
+      console.log('objects in scene ',nameBuffer.length)     
+    }
+  }, [sceneArray])   
+
+  return null;         
 };
 
 
@@ -190,8 +209,11 @@ export default function Home({ seedlings }) {
   const [spotlightPos, setSpotlightPos] = useState()
   const [fullSeed, setFullSeed] = useState(null)
   const [menuVisibility, setMenuVisibility] = useState(false)
+  const [refreshFlowerArray, setRefreshFlowerArray] = useState(false)
+  const [flowerKey, setFlowerKey] = useState(1)
 
   const startNode = useRef()
+  const flowerRef = useRef()
 
   let r = Math.PI / 180;
 
@@ -201,7 +223,16 @@ export default function Home({ seedlings }) {
       setShowSelector(false)
       setAnimate(true)
     }
-  }, [myFlowers])
+  }, [myFlowers]) 
+
+  useEffect(() => {
+    if (refreshFlowerArray) {
+      console.log('in refresh')
+      setMyFlowers(prevFlowers => prevFlowers.filter(flower => flower.id !== refreshFlowerArray));
+      setRefreshFlowerArray(null)
+      setRenderedFlowers(myFlowers)
+    }
+  }, [myFlowers, refreshFlowerArray]);
 
   function plantSeed(seedData, position, dataType) {
     setAnimate(true)
@@ -220,17 +251,14 @@ export default function Home({ seedlings }) {
 
     postFlower(newFlower, dataType)
       .then(data => {
-        console.log("data.data.attributes", data.data.attributes)
-        const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
-        console.log("cleanedNewFlower", cleanedNewFlower)
+        const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes, data.data.id)
         setMyFlowers(prev => [...prev, cleanedNewFlower])
         setNewSeedType(null)
+        setFlowerKey(prev => prev +1)
         // setFullSeed(null)
         // setShowSelector(false)
       })
   }
-
-  console.log('myFlowers', myFlowers)
 
   function cleanFlowers(flowers) {
     return flowers.map((flower) => {
@@ -299,21 +327,19 @@ export default function Home({ seedlings }) {
 
   const deleteThisFlower = async (id) => {
     await deleteFlower(id)
-    getAllFlowers()
+    getAllFlowers()  
   }
 
   const renderFlowers = () => {
-    console.log("inside rendered flowers")
     const chooseFlower = (flower) => {
-
       switch (flower.plant_type) {
         case 'flower1': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
+          return <Flower1 key={Date.now()} setRefreshFlowerArray={setRefreshFlowerArray} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
         }
         case 'flower2': {
-          return <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
+          return <Flower1 key={Date.now()} setRefreshFlowerArray={setRefreshFlowerArray}  setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
         }
-        default: <Flower1 key={Date.now()} setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
+        default: <Flower1 key={Date.now()} setRefreshFlowerArray={setRefreshFlowerArray}  setSpotlightPos={setSpotlightPos} setBreedMode={setBreedMode} renderOrder={50} usePhysics={true} deleteThisFlower={deleteThisFlower} stage={null} flower={flower} pos={flower.position.split(',')} breedMode={breedMode} selectFlowerToBreed={selectFlowerToBreed} setFlowerToBreed={setFlowerToBreed} breed={breed} menuVisibility={menuVisibility} setMenuVisibility={setMenuVisibility} />
       }
     }
 
@@ -321,24 +347,25 @@ export default function Home({ seedlings }) {
     myFlowers.forEach((flower) => {
       flowerArray.push(chooseFlower(flower))
     })
-
-    console.log('flowerArray', flowerArray)
-    setRenderedFlowers(flowerArray)
+    setRenderedFlowers(flowerArray)  
   }
 
   useEffect(() => {
-    renderFlowers()
+    renderFlowers() 
+    setFlowerKey(prev => prev +1)     
   }, [myFlowers, breedMode])
 
-  if (startNode.current) {
+
+  if (startNode.current) { 
     setStartPosition(startNode.current.position)
   }
 
   useEffect(() => {
     if (!myFlowers.length) {
       setShowSelector(true)
+      setAnimate(false)
     } else {
-      setShowSelector(false)
+      setShowSelector(false)  
     }
   }, [myFlowers.length])
 
@@ -362,34 +389,26 @@ export default function Home({ seedlings }) {
   function selectFlowerToBreed(id) {
       const foundFlower = myFlowers.find(flower => flower.id === id)
       setFlowerToBreed((prev) => {
-        console.log('prev', prev)
         return [...prev, foundFlower]
       })
   }
 
   useEffect(() => {
     if (flowerToBreed.length === 2) {
-      console.log('up in here')
       setReadyToBreed(true)
     }
   }, [flowerToBreed])
 
   function breed(flower) {
-    console.log("flower", reverseConvertPlantObj(flower))
-    console.log("flowerToBreed", reverseConvertPlantObj(flowerToBreed))
     const babyFlower = breedFlowers(reverseConvertPlantObj(flower), reverseConvertPlantObj(flowerToBreed))
-    console.log("babyFlower", babyFlower)
     setBreedMode(false)
-    setFullSeed(babyFlower)
+    setFullSeed(babyFlower)      
   }
-
- 
-  console.log("flowerToBreed", flowerToBreed)
 
   return (
     <StyledHome className={`home ${background}`}>
       <Canvas id="canvas" style={{background: 'black'}} shadows orthographic camera={{ zoom: 80, position: [0, 20, 100] }} >
-        <SceneTraversal />
+        
         {/* {/* <Stats showPanel={0} className="stats" /> */}
         {!breedMode && 
         <Physics onClick={(e) => { console.log('clicked physics', e.target) }} gravity={[0, -0.8, 0]}>
@@ -399,7 +418,7 @@ export default function Home({ seedlings }) {
           {onLanding ?
             <>
             <Skybox />
-            <Landing startGame={startGame} />
+            <Landing startGame={startGame} /> 
             </>
             :
             <>
@@ -410,8 +429,10 @@ export default function Home({ seedlings }) {
                 showSelector ?
                 <SeedSelector className="seed-selector" seedlings={mySeedlings} pickSeed={pickSeed} />
                 :
-                  <group>
-                    <Float
+                <>
+                <SceneTraversal />
+                  <group name={'homepage scene'}>
+                    <Float 
                       speed={10}
                       rotationIntensity={.04}
                       floatIntensity={.06}
@@ -419,10 +440,11 @@ export default function Home({ seedlings }) {
                       <AnimatedGroup goToSeedSelector={goToSeedSelector} toggleBreedMode={toggleBreedMode} readyToBreed={readyToBreed} breedFlowers={breedFlowers} />
                     </Float>
                     {plantNodes}
-                    <RenderedFlowers renderedFlowers={renderedFlowers} />
+                    <RenderedFlowers key={flowerKey} ref={flowerRef} renderedFlowers={renderedFlowers} myFlowers={myFlowers} />
                     {newSeedType && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} seedType={newSeedType} plantNodes={plantNodes} />}
                     {fullSeed && <DraggableObject plantSeed={plantSeed} pos={[-10, 0, -5]} plantNodes={plantNodes} fullSeed={fullSeed} />}
                   </group>
+                  </>
               }
               {/* <OrbitControls /> */}
             </>
@@ -435,8 +457,8 @@ export default function Home({ seedlings }) {
             <Stars radius={20} depth={10} count={10000} factor={2} saturation={0} fade speed={1.5} />
             <Physics>
               <BreedingScreen breedMode={breedMode} renderedFlowers={renderedFlowers} spotlightPos={spotlightPos} goHome={goHome}/>
-              <RenderedFlowers renderedFlowers={renderedFlowers} />
-            </Physics>
+              <RenderedFlowers key={flowerKey} ref={flowerRef} renderedFlowers={renderedFlowers} myFlowers={myFlowers}/>   
+            </Physics>  
           </>
         }
 

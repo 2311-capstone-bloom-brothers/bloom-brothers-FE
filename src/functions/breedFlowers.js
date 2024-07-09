@@ -4,7 +4,6 @@ export default function breedFlowers(plant1, plant2) {
     babyPlant.phases.bloom = breedComponent(plant1.phases.bloom, plant2.phases.bloom, plant2.mutationRate, 2)
     
     function breedComponent(plant1Component, plant2Component, mutationRate, worldToxicity) {
-        console.log(plant2Component)
         const babyPlantComponent = { ...plant1Component }
         const plantProperties = Object.keys(plant1Component)
     

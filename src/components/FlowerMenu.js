@@ -5,13 +5,15 @@ import './FlowerMenu.css'
 import { useState, useEffect } from 'react';
 import { deleteFlower } from '../apiCalls';
 
-const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breedMode, breed, setDisplayMenu}) => {
+const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, setSpotlightPos, breedMode, breed, setDisplayMenu, setRefreshFlowerArray}) => {
     const [infoDisplay, setInfoDisplay] = useState(true)
     const [compostDisplay, setCompostDisplay] = useState(false)
     const [breedDisplay, setBreedDisplay] = useState(false)
     const [thisFlower, setThisFlower] = useState(flower)
     const [flowerStage, setFlowerStage] = useState(currentStage)
     const [activeButton, setActiveButton] = useState('infoButton')
+
+    console.log('flower menu', breedMode)
 
     const handleDisplay = (e) => {
         switch(e.target.id){
@@ -42,6 +44,7 @@ const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, 
         setDisplayMenu(false)
     }
 
+
   return (
     <group position={[-1.7,5,0]}>
         {!breedMode ? 
@@ -54,7 +57,7 @@ const FlowerMenu = ({flower, currentStage, setBreedMode, pos, setFlowerToBreed, 
                 </span>
             <group >
                 {infoDisplay && <PlantInfo className='display-group' flower={thisFlower} currentStage={flowerStage} />}
-                {compostDisplay && <CompostPlant flower={thisFlower}/>}
+                {compostDisplay && <CompostPlant setRefreshFlowerArray={setRefreshFlowerArray} flower={thisFlower}/>}
                 {breedDisplay && <BreedPlant flower={thisFlower} setBreedMode={setBreedMode} pos={pos} setFlowerToBreed={setFlowerToBreed} setSpotlightPos={setSpotlightPos}/>}
             </group>
             </Html>
@@ -87,8 +90,13 @@ const PlantInfo = ({flower, currentStage}) => {
     )
 }
 
-const CompostPlant = ({flower}) => {
+const CompostPlant = ({flower, setRefreshFlowerArray}) => {
     
+    const handleDelete = (id) => {
+        deleteFlower(id)
+        setRefreshFlowerArray(id)
+    }
+
     return(
     <>
         <div className='menu-text-container'>
@@ -96,7 +104,7 @@ const CompostPlant = ({flower}) => {
                 <p className='menu-p'>This will permanently remove 
                 this plant from your garden.</p>
         </div>
-        <button className='compost-button' onClick={() => deleteFlower(flower.id)} >cOMPOST</button>
+        <button className='compost-button' onClick={() => handleDelete(flower.id)} >cOMPOST</button>
     </>
     
     )

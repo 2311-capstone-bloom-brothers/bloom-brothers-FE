@@ -116,10 +116,9 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed, fullSee
           <Html
             position={[0,2.2,0]}  
             ref={infoBoxRef}     
-          >
-            
+          >    
             <div className="to-plant-menu">
-              Find my<br></br>new home!
+              Find my<br></br>new home!  
             </div>
           </Html>
         )}
@@ -130,6 +129,7 @@ const DraggableObject = ({ flower, seedType, plantNodes, pos, plantSeed, fullSee
           >
             <div style={{ position: 'absolute', top: 10, left: 10, padding: '5px', borderRadius: '3px' }}>
               <button onClick={(e) => {
+                console.log(attachNode)
                 seedType && plantSeed(seedType, attachNode, "new")
                 fullSeed && plantSeed(fullSeed, attachNode, "bred")
               }} className='plant-here-button'>Plant Here?</button>
