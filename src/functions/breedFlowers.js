@@ -1,10 +1,13 @@
+import getRandomNameCombo from "./getRandomNameCombo";
+
 export default function breedFlowers(plant1, plant2) {
     const babyPlant = { ...plant1 }
+    babyPlant.name = getRandomNameCombo()
+    babyPlant.description = `Child of ${plant1.name} and ${plant2.name}`
     babyPlant.phases.stem = breedComponent(plant1.phases.stem, plant2.phases.stem, plant1.mutationRate, 2)
     babyPlant.phases.bloom = breedComponent(plant1.phases.bloom, plant2.phases.bloom, plant2.mutationRate, 2)
     
     function breedComponent(plant1Component, plant2Component, mutationRate, worldToxicity) {
-        console.log(plant2Component)
         const babyPlantComponent = { ...plant1Component }
         const plantProperties = Object.keys(plant1Component)
     

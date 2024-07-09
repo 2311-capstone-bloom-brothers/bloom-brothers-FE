@@ -220,7 +220,7 @@ export default function Home({ seedlings }) {
 
     postFlower(newFlower, dataType)
       .then(data => {
-        console.log("data.data.attributes", data.data.attributes)
+        // console.log("data.data.attributes", data.data.attributes)
         const cleanedNewFlower = flowerConverter.convertFlowerObject(data.data.attributes)
         console.log("cleanedNewFlower", cleanedNewFlower)
         setMyFlowers(prev => [...prev, cleanedNewFlower])
@@ -246,6 +246,7 @@ export default function Home({ seedlings }) {
   const getAllFlowers = () => {
     getFlowers()
       .then(data => {
+        console.log('data', data)
         const cleanedFlowers = cleanFlowers(data.data)
         !cleanedFlowers.length && setAnimate(false)
         setMyFlowers(cleanedFlowers)
@@ -375,16 +376,18 @@ export default function Home({ seedlings }) {
   }, [flowerToBreed])
 
   function breed(flower) {
-    console.log("flower", reverseConvertPlantObj(flower))
-    console.log("flowerToBreed", reverseConvertPlantObj(flowerToBreed))
-    const babyFlower = breedFlowers(reverseConvertPlantObj(flower), reverseConvertPlantObj(flowerToBreed))
+    console.log("flower", flower)
+    console.log("flowerToBreed", flowerToBreed)
+    const revCleanedFlower = reverseConvertPlantObj(flower)
+    const revCleanedFlowerToBreed = reverseConvertPlantObj(flowerToBreed)
+    console.log("revCleanedFlower", revCleanedFlower)
+    console.log("revCleanedFlowerToBreed", revCleanedFlowerToBreed)
+    const babyFlower = breedFlowers(revCleanedFlower, revCleanedFlowerToBreed)
     console.log("babyFlower", babyFlower)
     setBreedMode(false)
     setFullSeed(babyFlower)
   }
 
- 
-  console.log("flowerToBreed", flowerToBreed)
 
   return (
     <StyledHome className={`home ${background}`}>

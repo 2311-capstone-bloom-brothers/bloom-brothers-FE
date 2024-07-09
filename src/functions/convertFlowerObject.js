@@ -19,26 +19,31 @@ const convertFlowerObject = (flower, id) => {
             seedling: {
                 ...getComponentData(flower, 'bloom', 0),
                 ...getComponentData(flower, 'stem', 0),
+                
             },
             blooming: {
                 ...getComponentData(flower, 'bloom', 1),
-                ...getComponentData(flower, 'stem', 1)
+                ...getComponentData(flower, 'stem', 1),
             },
             thriving: {
                 ...getComponentData(flower, 'bloom', 2),
-                ...getComponentData(flower, 'stem', 2)
+                ...getComponentData(flower, 'stem', 2),
             },
             wilting: {
                 ...getComponentData(flower, 'bloom', 3),
-                ...getComponentData(flower, 'stem', 3)
+                ...getComponentData(flower, 'stem', 3),
             },
             dead: {
                 ...getComponentData(flower, 'bloom', 4),
-                ...getComponentData(flower, 'stem', 4)
+                ...getComponentData(flower, 'stem', 4),
             }
         }
     }
-    // console.log(flower)
+    newFlower.phases.seedling.color = flower.phases.bloom.color[0]
+    newFlower.phases.blooming.color = flower.phases.bloom.color[1]
+    newFlower.phases.thriving.color = flower.phases.bloom.color[2]
+    newFlower.phases.wilting.color = flower.phases.bloom.color[3]
+    newFlower.phases.dead.color = flower.phases.bloom.color[4]
     return newFlower
 }
 

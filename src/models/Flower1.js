@@ -44,8 +44,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const [displayMenu, setDisplayMenu] = useState(false)
   const [allowMenu, setAllowMenu] = useState(false)
 
-  console.log("breedMode in flower 1", breedMode)
-
   useEffect(() => {
     
     if (!stage) {
@@ -179,8 +177,6 @@ const Flower1 = ({ flower, stage, pos, deleteThisFlower, canDelete, usePhysics, 
   const handleClick = () =>{
     setDisplayMenu(true)
   }
-
-  console.log('displayMenu', displayMenu)
 
   return (
     <group position={pos}>
